@@ -497,14 +497,22 @@ function init(isMenuMode = false) {
 
     // Gestione fisica continua
     Events.on(engine, 'beforeUpdate', () => {
-        balls.forEach(ball => {
-            const b = ball.position, v = ball.velocity;
-            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-        });
+    balls.forEach(ball => {
+        const b = ball.position, v = ball.velocity;
+        
+        // Verifica se la pallina ha colpito un bordo (fai un check sulla posizione)
+        let hitEdge = false;
+        
+        if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); hitEdge = true; }
+        else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); hitEdge = true; }
+        
+        if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); hitEdge = true; }
+        else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); hitEdge = true; }
+        
+        // Suona solo se c'è stato un impatto
+        if (hitEdge) playGlassSfx();
     });
+});
 }
 
         function addBall() {
@@ -532,7 +540,25 @@ function init(isMenuMode = false) {
         function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = timeLeft; if (timeLeft <= 0) gameOver(); }, 1000); }
         function levelWin() { currentLevel++; if (currentLevel % 5 === 0) { addBall(); playSfx('bonus'); } if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); document.getElementById('lvl-num').innerText = currentLevel; spawnLevel(getVpWidth(), getVpHeight()); }
         function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
-        
+
+        function playGlassSfx() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    // Suono cristallino: onda sinusoidale, alta frequenza, decay velocissimo
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime); // Pitch alto e leggermente variabile
+    
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime); // Molto basso, sottile
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08); // Decay brevissimo
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+}
+
         window.addEventListener('devicemotion', (e) => {
     // Rimosso !isPaused dalla condizione perché nel menu non usiamo la pausa
     if (gameActive && e.accelerationIncludingGravity) {
