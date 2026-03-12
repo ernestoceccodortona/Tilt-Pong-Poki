@@ -435,7 +435,7 @@ async function resetGame() {
     init(false);
 }
 
-function init(isMenuMode = false) {
+async function init(isMenuMode = false) {
     // 1. Pulisci residui
     const container = document.getElementById('game-container');
     const existingCanvas = container.querySelector('canvas');
@@ -499,27 +499,49 @@ function init(isMenuMode = false) {
     Events.on(engine, 'beforeUpdate', () => {
     balls.forEach(ball => {
         const b = ball.position, v = ball.velocity;
+        const w = getVpWidth(), h = getVpHeight();
         
-        // Verifica se la pallina ha colpito un bordo (fai un check sulla posizione)
-        let hitEdge = false;
-        
-        if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); hitEdge = true; }
-        else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); hitEdge = true; }
-        
-        if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); hitEdge = true; }
-        else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); hitEdge = true; }
-        
-        // Suona solo se c'è stato un impatto
-        if (hitEdge) playGlassSfx();
+        // Verifica se la pallina è attualmente "fuori" (nei margini)
+        const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
+
+        if (isCurrentlyTouching) {
+            // Se non stava già suonando, suona ora
+            if (!ball.isColliding) {
+                playGlassSfx();
+                ball.isColliding = true;
+            }
+            
+            // Applica il rimbalzo (la tua logica esistente)
+            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+        } else {
+            // Se la pallina è tornata nel campo, resettiamo il flag
+            ball.isColliding = false;
+        }
     });
 });
+
+// Sblocca l'audio anche in modalità menu al primo interazione
+    if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+    }
+
 }
 
         function addBall() {
-            const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { restitution: 0.8, friction: 0, frictionAir: 0, label: 'ball', render: { fillStyle: '#ffffff' } });
-            balls.push(ball);
-            Composite.add(engine.world, ball);
-        }
+    const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { 
+        restitution: 0.8, 
+        friction: 0, 
+        frictionAir: 0, 
+        label: 'ball', 
+        render: { fillStyle: '#ffffff' } 
+    });
+    ball.isColliding = false; // Flag per gestire il suono
+    balls.push(ball);
+    Composite.add(engine.world, ball);
+}
 
         function spawnLevel(w, h) {
             const colors = ['#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
