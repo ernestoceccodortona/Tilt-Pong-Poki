@@ -431,6 +431,7 @@ async function resetGame() {
 }
 
         function init(isMenuMode = false) {
+            
     const w = getVpWidth(), h = getVpHeight();
     
     engine = Engine.create(); 
@@ -462,6 +463,15 @@ async function resetGame() {
         document.getElementById('pause-btn').style.display = 'block';
     } else {
         document.getElementById('pause-btn').style.display = 'none';
+    }
+
+    const uiLayer = document.getElementById('ui-layer');
+    if (isMenuMode) {
+        uiLayer.style.display = 'none'; // Nasconde Level 1
+        enableMenuInteractions();
+    } else {
+        uiLayer.style.display = 'flex'; // Mostra Level 1
+        disableMenuInteractions();
     }
 
     // Gestione collisioni e bordi (il tuo codice esistente...)
@@ -536,10 +546,18 @@ if (isMenuMode) {
 });
 
 function changeBgRandom() {
-    const colors = ['#000000', '#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    document.body.style.setProperty('--bg-color', randomColor);
+    // Colori con bassa luminosità (es. HSL con L=5% o 10%)
+    const randomHue = Math.floor(Math.random() * 360);
+    document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
 }
+
+// 2. Forza il Fullscreen al primo tap (spesso i browser lo bloccano al caricamento)
+document.addEventListener('click', function goFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    document.removeEventListener('click', goFullscreen); // Eseguito solo una volta
+}, { once: true });
 
 
 // Gestione automatica della pausa (richiesta da Poki)
