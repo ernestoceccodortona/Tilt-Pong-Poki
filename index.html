@@ -121,12 +121,15 @@
     button { 
         margin: 10px; 
         padding: 16px 40px; 
-        background: white; 
-        color: black; 
-        border: none; 
-        border-radius: 14px; /* Match con i tasti sopra */
+        /* Nuovo stile uniforme */
+        background: rgba(255, 255, 255, 0.08); 
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white; /* Testo bianco */
+        border-radius: 14px; 
         font-size: 0.85rem; 
-        font-weight: 800; 
+        font-weight: 700; 
         letter-spacing: 2px; 
         cursor: pointer; 
         text-transform: uppercase; 
@@ -135,8 +138,13 @@
     
     button:active {
         transform: scale(0.92);
-        background: #eee;
+        background: rgba(255, 255, 255, 0.15); /* Leggero feedback al click */
     }
+
+    button[onclick="resetGame()"] {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+    
 </style>
 </head>
 <body>
@@ -198,9 +206,13 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
         let noteCounter = 0;
 
         function startBGM() {
-            if (bgmInterval || !musicOn) return;
-            const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
-            const bass = [165, 147, 131, 196];
+    if (bgmInterval || !musicOn) return;
+    
+    // Reset del contatore delle note ogni volta che la musica parte da zero
+    noteCounter = 0; 
+    
+    const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
+    const bass = [165, 147, 131, 196];
 
             bgmInterval = setInterval(() => {
                 const time = audioCtx.currentTime;
@@ -239,9 +251,18 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
 
         // Aggiungi questa funzione di supporto per pulire davvero tutto
 function cleanupGame() {
+
+    // Assicurati che il canvas precedente sparisca davvero dal DOM
+    const container = document.getElementById('game-container');
+    const canvases = container.getElementsByTagName('canvas');
+    for (let c of canvases) c.remove();
+
     gameActive = false;
     clearInterval(timerInterval);
+    
+    // Fermiamo l'intervallo e resettiamo la posizione della melodia
     stopBGM();
+    noteCounter = 0;
     
     // Reset del colore di sfondo al nero originale
     document.body.style.setProperty('--bg-color', '#000');
@@ -478,7 +499,8 @@ async function resetGame() {
         function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
         
         window.addEventListener('devicemotion', (e) => {
-    if (gameActive && !isPaused) {
+    // Rimosso !isPaused dalla condizione perché nel menu non usiamo la pausa
+    if (gameActive && e.accelerationIncludingGravity) {
         // Se è iOS, invertiamo il segno per allinearlo ad Android
         const multiplier = isIOS ? -1 : 1; 
         
@@ -494,9 +516,9 @@ function changeBgRandom() {
 }
 
 // Listener per il click sullo sfondo (overlay del menu)
-document.getElementById('overlay').addEventListener('click', (e) => {
-    // Cambia colore solo se non stiamo cliccando un bottone
-    if (e.target.tagName !== 'BUTTON') {
+document.body.addEventListener('click', (e) => {
+    // Cambia colore solo se clicchi sullo sfondo (e non sui bottoni)
+    if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn') {
         changeBgRandom();
     }
 });
@@ -509,9 +531,10 @@ window.addEventListener('keydown', (ev) => {
 });
 
 // In fondo allo script, avvia la "Modalità Menu"
-window.onload = () => {
-    init(true); 
-};
+document.addEventListener("DOMContentLoaded", () => {
+    // Verifica che non sia già stato inizializzato
+    if (!engine) init(true); 
+});
 
 // Se l'utente esce dalla pagina o Poki apre un overlay
 PokiSDK.setDebug(false); // Imposta a true durante lo sviluppo se vuoi log extra
