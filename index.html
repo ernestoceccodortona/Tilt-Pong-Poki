@@ -31,8 +31,8 @@
         position: fixed; 
     }
     
-    #game-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; }
-    canvas { display: block !important; width: 100% !important; height: 100% !important; z-index: 2; border: none !important; }
+    #game-container { position: relative; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+    canvas { display: block !important; width: 100% !important; height: 100% !important; z-index: 2; border: none !important; position: absolute; top: 0; left: 0; }
     
     #ui-layer { 
         position: absolute; 
@@ -96,8 +96,8 @@
         flex-direction: column; 
         justify-content: center; 
         align-items: center; 
-        background: #000; 
-        z-index: 500; 
+        background: rgba(0, 0, 0, 0);; 
+        z-index: 3; 
         text-align: center; 
         pointer-events: auto; 
     }
@@ -442,8 +442,16 @@ async function resetGame() {
     });
     
     balls = []; 
-    addBall(); 
+    addBall();
     
+    
+    Render.run(render); 
+    runner = Runner.create(); 
+    Runner.run(runner, engine);
+    
+    gameActive = true; 
+    isPaused = false;
+
     // Se non è il menu, genera i mattoncini e avvia il timer
     if (!isMenuMode) {
         spawnLevel(w, h);
@@ -452,13 +460,6 @@ async function resetGame() {
     } else {
         document.getElementById('pause-btn').style.display = 'none';
     }
-    
-    Render.run(render); 
-    runner = Runner.create(); 
-    Runner.run(runner, engine);
-    
-    gameActive = true; 
-    isPaused = false;
 
     // Gestione collisioni e bordi (il tuo codice esistente...)
     Events.on(engine, 'beforeUpdate', () => {
@@ -537,13 +538,6 @@ function changeBgRandom() {
     document.body.style.setProperty('--bg-color', randomColor);
 }
 
-// Listener per il click sullo sfondo (overlay del menu)
-document.body.addEventListener('click', (e) => {
-    // Cambia colore solo se clicchi sullo sfondo (e non sui bottoni)
-    if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn') {
-        changeBgRandom();
-    }
-});
 
 // Gestione automatica della pausa (richiesta da Poki)
 window.addEventListener('keydown', (ev) => {
