@@ -243,6 +243,9 @@ function cleanupGame() {
     clearInterval(timerInterval);
     stopBGM();
     
+    // Reset del colore di sfondo al nero originale
+    document.body.style.setProperty('--bg-color', '#000');
+    
     if (runner) {
         Runner.stop(runner);
         runner = null;
@@ -340,95 +343,113 @@ async function resetGame() {
         }
 
         async function startGame(timed) {
-        PokiSDK.gameplayStart(); // <--- AGGIUNGI QUI
-    // 1. Gestione Audio Context (Essenziale per iOS)
+    // 1. Segnale a Poki: il gioco è partito
+    PokiSDK.gameplayStart();
+
+    // 2. Pulisci la fisica del menu (rimuove la pallina interattiva)
+    cleanupGame();
+    
+    // 3. Reset sfondo al nero richiesto
+    document.body.style.setProperty('--bg-color', '#000');
+
+    // 4. Ripristino Audio (indispensabile per mobile)
     if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
     }
 
-    // 2. Richiesta Permessi Giroscopio (Solo iOS)
+    // 5. Richiesta Permessi Giroscopio (iOS 13+)
     if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
         try {
             const permissionState = await DeviceMotionEvent.requestPermission();
-            if (permissionState !== 'granted') {
-                console.log("Permesso giroscopio negato");
-            }
+            if (permissionState !== 'granted') console.log("Permesso giroscopio negato");
         } catch (e) {
             console.error("Errore permessi sensori:", e);
         }
     }
 
-    // 3. Fullscreen (Solo se è supportato, evita errori su iOS)
-    if (document.documentElement.requestFullscreen) {
-        try { await document.documentElement.requestFullscreen(); } catch (e) { console.log("Fullscreen negato"); }
+    // 6. Fullscreen (Tentativo esplicito)
+    try {
+        const el = document.documentElement;
+        if (el.requestFullscreen) await el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen(); // Safari
+    } catch (e) {
+        console.log("Fullscreen negato o non supportato");
     }
 
-    // 4. Avvio logica
+    // 7. Configurazione UI
     isTimed = timed;
-    if (!isTimed) document.getElementById('timer-display').style.display = 'none';
+    document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
     document.getElementById('overlay').style.display = 'none';
+    
+    // IMPORTANTE: Mostriamo il tasto pausa solo qui
     document.getElementById('pause-btn').style.display = 'block';
     
-    // Avvia la musica solo DOPO che il contesto audio è attivo
-    if (musicOn) {
-        startBGM();
-    }
+    // 8. Avvio Musica e Motore di gioco
+    if (musicOn) startBGM();
     
-    init();
+    // Avvia la logica di gioco (non menu mode)
+    init(false);
 }
 
-        function init() {
-            const w = getVpWidth(), h = getVpHeight();
-            
-            // 1. Assicurati che l'engine sia attivo
-            engine = Engine.create(); 
-            engine.enabled = true; // FORZA ATTIVAZIONE
-            engine.gravity.x = 0; 
-            engine.gravity.y = 0;
-            
-            render = Render.create({ 
-                element: document.getElementById('game-container'), 
-                engine: engine, 
-                options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
-            });
-            
-            balls = []; 
-            addBall(); 
-            spawnLevel(w, h);
-            
-            Render.run(render); 
-            runner = Runner.create(); 
-            
-            // 2. Forza il runner a collegarsi all'engine appena creato
-            Runner.run(runner, engine);
-            
-            gameActive = true;
-            isPaused = false; // Forza lo stato di non pausa
-            
-            if (isTimed) startTimer();
-            // ... resto del codice (Events.on, ecc.)
-            Events.on(engine, 'beforeUpdate', () => {
-                balls.forEach(ball => {
-                    const b = ball.position, v = ball.velocity;
-                    if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                    else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                    if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-                    else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-                });
-            });
+        function init(isMenuMode = false) {
+    const w = getVpWidth(), h = getVpHeight();
+    
+    engine = Engine.create(); 
+    engine.enabled = true;
+    engine.gravity.x = 0; 
+    engine.gravity.y = 0;
+    
+    render = Render.create({ 
+        element: document.getElementById('game-container'), 
+        engine: engine, 
+        options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
+    });
+    
+    balls = []; 
+    addBall(); 
+    
+    // Se non è il menu, genera i mattoncini e avvia il timer
+    if (!isMenuMode) {
+        spawnLevel(w, h);
+        if (isTimed) startTimer();
+        document.getElementById('pause-btn').style.display = 'block';
+    } else {
+        document.getElementById('pause-btn').style.display = 'none';
+    }
+    
+    Render.run(render); 
+    runner = Runner.create(); 
+    Runner.run(runner, engine);
+    
+    gameActive = true; 
+    isPaused = false;
 
-            Events.on(engine, 'collisionStart', (e) => {
-                e.pairs.forEach(p => {
-                    const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
-                    if (b) {
-                        playSfx(b.label === 'void_brick' ? 'void' : 'hit');
-                        if (b.label === 'void_brick') triggerVoidEffect();
-                        Composite.remove(engine.world, b);
-                        if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
-                    }
-                });
+    // Gestione collisioni e bordi (il tuo codice esistente...)
+    Events.on(engine, 'beforeUpdate', () => {
+        balls.forEach(ball => {
+            const b = ball.position, v = ball.velocity;
+            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+        });
+    });
+
+    // Solo se non siamo nel menu gestiamo i mattoncini
+    if (!isMenuMode) {
+        Events.on(engine, 'collisionStart', (e) => {
+            e.pairs.forEach(p => {
+                const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
+                if (b) {
+                    playSfx(b.label === 'void_brick' ? 'void' : 'hit');
+                    if (b.label === 'void_brick') triggerVoidEffect();
+                    Composite.remove(engine.world, b);
+                    if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
+                }
             });
-        }
+        });
+    }
+}
 
         function addBall() {
             const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { restitution: 0.8, friction: 0, frictionAir: 0, label: 'ball', render: { fillStyle: '#ffffff' } });
@@ -466,12 +487,31 @@ async function resetGame() {
     }
 });
 
+function changeBgRandom() {
+    const colors = ['#000000', '#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    document.body.style.setProperty('--bg-color', randomColor);
+}
+
+// Listener per il click sullo sfondo (overlay del menu)
+document.getElementById('overlay').addEventListener('click', (e) => {
+    // Cambia colore solo se non stiamo cliccando un bottone
+    if (e.target.tagName !== 'BUTTON') {
+        changeBgRandom();
+    }
+});
+
 // Gestione automatica della pausa (richiesta da Poki)
 window.addEventListener('keydown', (ev) => {
     if (ev.keyCode === 32) { // Esempio: Spazio per mettere in pausa
         togglePause();
     }
 });
+
+// In fondo allo script, avvia la "Modalità Menu"
+window.onload = () => {
+    init(true); 
+};
 
 // Se l'utente esce dalla pagina o Poki apre un overlay
 PokiSDK.setDebug(false); // Imposta a true durante lo sviluppo se vuoi log extra
