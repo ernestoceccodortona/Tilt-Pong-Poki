@@ -192,6 +192,23 @@ PokiSDK.init().then(() => {
 // FORZA LA MODALITÀ TEST (Aggiungi questa riga)
 PokiSDK.setDebug(true);
 
+
+function handleBgTap(e) {
+    // Cambia il colore solo se il click non è sui bottoni
+    if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
+        changeBgRandom();
+    }
+}
+
+function enableMenuInteractions() {
+    document.body.addEventListener('click', handleBgTap);
+}
+
+function disableMenuInteractions() {
+    document.body.removeEventListener('click', handleBgTap);
+}
+
+
         // Aggiungi questa variabile di controllo in cima al tuo script
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
@@ -364,10 +381,8 @@ async function resetGame() {
         }
 
         async function startGame(timed) {
-    // 1. Segnale a Poki: il gioco è partito
+    disableMenuInteractions(); // <--- AGGIUNTA FONDAMENTALE
     PokiSDK.gameplayStart();
-
-    // 2. Pulisci la fisica del menu (rimuove la pallina interattiva)
     cleanupGame();
     
     // 3. Reset sfondo al nero richiesto
@@ -469,6 +484,13 @@ async function resetGame() {
                 }
             });
         });
+    }
+
+    
+if (isMenuMode) {
+        enableMenuInteractions(); // Attiva il cambio colore solo qui
+    } else {
+        disableMenuInteractions(); // Disattiva il cambio colore durante il gioco
     }
 }
 
