@@ -170,6 +170,10 @@ function quitToMenu() {
 async function resetGame() {
     // 1. Chiediamo a Poki di mostrare un annuncio (Commercial Break)
     // Poki deciderà in automatico se mostrarlo o saltarlo in base alla frequenza
+
+    // Forza lo stop di ogni suono prima del break
+    stopBGM();
+    
     PokiSDK.commercialBreak().then(() => {
         console.log("Fine pubblicità (o saltata): il gioco riprende.");
 
