@@ -96,11 +96,14 @@
         flex-direction: column; 
         justify-content: center; 
         align-items: center; 
-        background: rgba(0, 0, 0, 0);; 
+        background: rgba(0, 0, 0, 0);
         z-index: 3; 
         text-align: center; 
         pointer-events: auto; 
     }
+
+    #overlay.menu { background: rgba(0, 0, 0, 0); } /* Molto trasparente nella Home */
+    #pause-menu.menu, #game-over.menu { background: var(--bg-color); } /* Neri pieni durante gioco */
     
     h1 { 
         font-weight: 800; 
