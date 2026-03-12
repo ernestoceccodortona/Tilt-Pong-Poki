@@ -103,7 +103,7 @@
     }
 
     #overlay.menu { background: rgba(0, 0, 0, 0); } /* Molto trasparente nella Home */
-    #pause-menu.menu, #game-over.menu { background: var(--bg-color); } /* Neri pieni durante gioco */
+    #pause-menu.menu, #game-over.menu { background: #000; } /* Neri pieni durante gioco */
     
     h1 { 
         font-weight: 800; 
@@ -271,11 +271,10 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
 
         // Aggiungi questa funzione di supporto per pulire davvero tutto
 function cleanupGame() {
-
-    // Assicurati che il canvas precedente sparisca davvero dal DOM
+    // Rimuovi TUTTI i canvas presenti nel container
     const container = document.getElementById('game-container');
-    const canvases = container.getElementsByTagName('canvas');
-    for (let c of canvases) c.remove();
+    const canvases = container.querySelectorAll('canvas'); // Nota: querySelectorAll
+    canvases.forEach(c => c.remove());
 
     gameActive = false;
     clearInterval(timerInterval);
@@ -315,11 +314,17 @@ function cleanupGame() {
 
 function quitToMenu() {
     PokiSDK.gameplayStop();
-    cleanupGame(); // Usa la nuova funzione di pulizia
-    document.getElementById('game-over').style.display = 'none';
-    document.getElementById('pause-menu').style.display = 'none';
+    cleanupGame();
+    
+    // Ripristina la visibilità della UI della Home
+    document.getElementById('ui-layer').style.display = 'none'; // Nascondi tag Level e Timer
     document.getElementById('pause-btn').style.display = 'none';
-    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('pause-menu').style.display = 'none';
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('overlay').style.display = 'flex'; // Mostra il menu principale
+    
+    // Forza l'inizializzazione della Home (che crea pallina e attiva listener)
+    init(true); 
 }
 
 async function resetGame() {
@@ -430,11 +435,14 @@ async function resetGame() {
     init(false);
 }
 
-        function init(isMenuMode = false) {
-            
+function init(isMenuMode = false) {
+    // 1. Pulisci residui
+    const container = document.getElementById('game-container');
+    const existingCanvas = container.querySelector('canvas');
+    if (existingCanvas) existingCanvas.remove(); 
+
     const w = getVpWidth(), h = getVpHeight();
-    
-    engine = Engine.create(); 
+    engine = Engine.create();
     engine.enabled = true;
     engine.gravity.x = 0; 
     engine.gravity.y = 0;
@@ -445,9 +453,9 @@ async function resetGame() {
         options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
     });
     
+    // 2. Setup Pallina (UNA SOLA VOLTA)
     balls = []; 
     addBall();
-    
     
     Render.run(render); 
     runner = Runner.create(); 
@@ -456,36 +464,23 @@ async function resetGame() {
     gameActive = true; 
     isPaused = false;
 
-    // Se non è il menu, genera i mattoncini e avvia il timer
-    if (!isMenuMode) {
-        spawnLevel(w, h);
-        if (isTimed) startTimer();
-        document.getElementById('pause-btn').style.display = 'block';
-    } else {
-        document.getElementById('pause-btn').style.display = 'none';
-    }
-
+    // 3. Gestione UI e Logica basata su modalità
     const uiLayer = document.getElementById('ui-layer');
+    const pauseBtn = document.getElementById('pause-btn');
+
     if (isMenuMode) {
-        uiLayer.style.display = 'none'; // Nasconde Level 1
+        uiLayer.style.display = 'none';
+        pauseBtn.style.display = 'none';
         enableMenuInteractions();
     } else {
-        uiLayer.style.display = 'flex'; // Mostra Level 1
+        uiLayer.style.display = 'flex';
+        pauseBtn.style.display = 'block';
+        spawnLevel(w, h);
+        if (isTimed) startTimer();
         disableMenuInteractions();
     }
 
-    // Gestione collisioni e bordi (il tuo codice esistente...)
-    Events.on(engine, 'beforeUpdate', () => {
-        balls.forEach(ball => {
-            const b = ball.position, v = ball.velocity;
-            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-        });
-    });
-
-    // Solo se non siamo nel menu gestiamo i mattoncini
+    // 4. Collisioni (Aggiungile solo se NON sei nel menu)
     if (!isMenuMode) {
         Events.on(engine, 'collisionStart', (e) => {
             e.pairs.forEach(p => {
@@ -500,12 +495,16 @@ async function resetGame() {
         });
     }
 
-    
-if (isMenuMode) {
-        enableMenuInteractions(); // Attiva il cambio colore solo qui
-    } else {
-        disableMenuInteractions(); // Disattiva il cambio colore durante il gioco
-    }
+    // Gestione fisica continua
+    Events.on(engine, 'beforeUpdate', () => {
+        balls.forEach(ball => {
+            const b = ball.position, v = ball.velocity;
+            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+        });
+    });
 }
 
         function addBall() {
