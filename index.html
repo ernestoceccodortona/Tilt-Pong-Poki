@@ -70,6 +70,9 @@ PokiSDK.init().then(() => {
     console.log("Poki SDK non caricato");
 });
 
+// FORZA LA MODALITÀ TEST (Aggiungi questa riga)
+PokiSDK.setDebug(true);
+
         // Aggiungi questa variabile di controllo in cima al tuo script
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
