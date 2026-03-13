@@ -505,6 +505,10 @@ async function init(isMenuMode = false) {
     runner = Runner.create(); 
     Runner.run(runner, engine);
     
+    // --- FORZA LA VISIBILITÀ IMMEDIATAMENTE ---
+    render.canvas.style.opacity = '1'; 
+    render.canvas.classList.add('ready');
+
     gameActive = true; 
     isPaused = false;
 
