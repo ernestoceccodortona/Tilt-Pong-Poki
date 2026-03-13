@@ -204,12 +204,6 @@ function enableMenuInteractions() {
     document.body.addEventListener('click', handleBgTap);
 }
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Remove the event listener for handleBgTap from the document body.
- * This function is used to disable the background tap functionality when the game is active.
- */
-/*******  c92a117a-879f-43a2-8da8-1c8dfd8d4832  *******/
 function disableMenuInteractions() {
     document.body.removeEventListener('click', handleBgTap);
 }
@@ -439,19 +433,26 @@ async function resetGame() {
     init(false);
 }
 
-async function init(isMenuMode = false) {
+function init(isMenuMode = false) {
     const container = document.getElementById('game-container');
+    
+    // 1. Pulisci il canvas precedente
     const existingCanvas = container.querySelector('canvas');
     if (existingCanvas) existingCanvas.remove(); 
 
-    const w = getVpWidth(), h = getVpHeight();
+    // 2. Leggi le dimensioni REALI dal DOM (non dal viewport JS)
+    // clientWidth/Height tengono conto del CSS 100dvh applicato
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+
     engine = Engine.create();
     engine.enabled = true;
     engine.gravity.x = 0; 
     engine.gravity.y = 0;
     
+    // 3. Inizializza il render con le dimensioni precise
     render = Render.create({ 
-        element: document.getElementById('game-container'), 
+        element: container, 
         engine: engine, 
         options: { 
             width: w, 
