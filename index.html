@@ -59,8 +59,8 @@
     
     #timer-display { 
         font-size: 4.5rem; 
-        font-weight: 300; /* Leggero ma leggibile grazie al design del font */
-        letter-spacing: 1px; /* Qui i numeri respirano molto meglio */
+        font-weight: 300;
+        letter-spacing: 1px;
         line-height: 1; 
     }
     
@@ -72,7 +72,7 @@
         background: rgba(255, 255, 255, 0.08); 
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        border-radius: 12px; /* Meno arrotondato, più moderno */
+        border-radius: 12px;
         pointer-events: auto; 
         cursor: pointer; 
         font-size: 0.65rem; 
@@ -102,8 +102,8 @@
         pointer-events: auto; 
     }
 
-    #overlay.menu { background: rgba(0, 0, 0, 0); } /* Molto trasparente nella Home */
-    #pause-menu.menu, #game-over.menu { background: #000; } /* Neri pieni durante gioco */
+    #overlay.menu { background: rgba(0, 0, 0, 0); }
+    #pause-menu.menu, #game-over.menu { background: #000; }
     
     h1 { 
         font-weight: 800; 
@@ -124,12 +124,11 @@
     button { 
         margin: 10px; 
         padding: 16px 40px; 
-        /* Nuovo stile uniforme */
         background: rgba(255, 255, 255, 0.08); 
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white; /* Testo bianco */
+        color: white;
         border-radius: 14px; 
         font-size: 0.85rem; 
         font-weight: 700; 
@@ -141,7 +140,7 @@
     
     button:active {
         transform: scale(0.92);
-        background: rgba(255, 255, 255, 0.15); /* Leggero feedback al click */
+        background: rgba(255, 255, 255, 0.15);
     }
 
     button[onclick="resetGame()"] {
@@ -183,21 +182,17 @@
 
     <script>
 
-        // In cima allo script, dopo le costanti iniziali
 PokiSDK.init().then(() => {
     console.log("Poki SDK pronto");
-    // Comunica a Poki che il caricamento è finito (il menu è visibile)
     PokiSDK.gameLoadingFinished();
 }).catch(() => {
     console.log("Poki SDK non caricato");
 });
 
-// FORZA LA MODALITÀ TEST (Aggiungi questa riga)
 PokiSDK.setDebug(true);
 
 
 function handleBgTap(e) {
-    // Cambia il colore solo se il click non è sui bottoni
     if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
         changeBgRandom();
     }
@@ -212,7 +207,6 @@ function disableMenuInteractions() {
 }
 
 
-        // Aggiungi questa variabile di controllo in cima al tuo script
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 
@@ -228,7 +222,6 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
         function startBGM() {
     if (bgmInterval || !musicOn) return;
     
-    // Reset del contatore delle note ogni volta che la musica parte da zero
     noteCounter = 0; 
     
     const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
@@ -269,21 +262,17 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
             musicOn ? startBGM() : stopBGM();
         }
 
-        // Aggiungi questa funzione di supporto per pulire davvero tutto
 function cleanupGame() {
-    // Rimuovi TUTTI i canvas presenti nel container
     const container = document.getElementById('game-container');
-    const canvases = container.querySelectorAll('canvas'); // Nota: querySelectorAll
+    const canvases = container.querySelectorAll('canvas');
     canvases.forEach(c => c.remove());
 
     gameActive = false;
     clearInterval(timerInterval);
     
-    // Fermiamo l'intervallo e resettiamo la posizione della melodia
     stopBGM();
     noteCounter = 0;
     
-    // Reset del colore di sfondo al nero originale
     document.body.style.setProperty('--bg-color', '#000');
     
     if (runner) {
@@ -293,18 +282,15 @@ function cleanupGame() {
     
     if (render) {
         Render.stop(render);
-        // Rimuoviamo il canvas dal DOM
         if (render.canvas) render.canvas.remove();
         render = null;
     }
     
     if (engine) {
-        // Pulisce tutti i corpi e i vincoli
         Composite.clear(engine.world, false);
         engine = null;
     }
     
-    // Reset grafico e variabili
     currentLevel = 1;
     timeLeft = 20;
     document.getElementById('lvl-num').innerText = currentLevel;
@@ -316,37 +302,28 @@ function quitToMenu() {
     PokiSDK.gameplayStop();
     cleanupGame();
     
-    // Ripristina la visibilità della UI della Home
-    document.getElementById('ui-layer').style.display = 'none'; // Nascondi tag Level e Timer
+    document.getElementById('ui-layer').style.display = 'none';
     document.getElementById('pause-btn').style.display = 'none';
     document.getElementById('pause-menu').style.display = 'none';
     document.getElementById('game-over').style.display = 'none';
-    document.getElementById('overlay').style.display = 'flex'; // Mostra il menu principale
+    document.getElementById('overlay').style.display = 'flex';
     
-    // Forza l'inizializzazione della Home (che crea pallina e attiva listener)
     init(true); 
 }
 
 async function resetGame() {
-    // 1. Chiediamo a Poki di mostrare un annuncio (Commercial Break)
-    // Poki deciderà in automatico se mostrarlo o saltarlo in base alla frequenza
 
-    // Forza lo stop di ogni suono prima del break
     stopBGM();
     
     PokiSDK.commercialBreak().then(() => {
         console.log("Fine pubblicità (o saltata): il gioco riprende.");
 
-        // 2. Pulisci tutto prima di ripartire (il tuo codice originale)
         cleanupGame();
         
-        // 3. Prepariamo la UI
         document.getElementById('game-over').style.display = 'none';
         document.getElementById('pause-btn').style.display = 'block';
 
-        // 4. Piccola pausa per il Garbage Collector
         setTimeout(async () => {
-            // Proviamo il fullscreen (opzionale su Poki)
             try { 
                 if (document.documentElement.requestFullscreen) {
                     await document.documentElement.requestFullscreen(); 
@@ -355,10 +332,8 @@ async function resetGame() {
                 console.log("Fullscreen non disponibile");
             }
 
-            // 5. Inizializza il motore fisico e gli oggetti
             init();
 
-            // 6. Avvia la musica e segnala a Poki che il gameplay è iniziato
             if(musicOn) startBGM();
             PokiSDK.gameplayStart(); 
             
@@ -389,19 +364,16 @@ async function resetGame() {
         }
 
         async function startGame(timed) {
-    disableMenuInteractions(); // <--- AGGIUNTA FONDAMENTALE
+    disableMenuInteractions();
     PokiSDK.gameplayStart();
     cleanupGame();
     
-    // 3. Reset sfondo al nero richiesto
     document.body.style.setProperty('--bg-color', '#000');
 
-    // 4. Ripristino Audio (indispensabile per mobile)
     if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
     }
 
-    // 5. Richiesta Permessi Giroscopio (iOS 13+)
     if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
         try {
             const permissionState = await DeviceMotionEvent.requestPermission();
@@ -411,32 +383,26 @@ async function resetGame() {
         }
     }
 
-    // 6. Fullscreen (Tentativo esplicito)
     try {
         const el = document.documentElement;
         if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen(); // Safari
+        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
     } catch (e) {
         console.log("Fullscreen negato o non supportato");
     }
 
-    // 7. Configurazione UI
     isTimed = timed;
     document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
     document.getElementById('overlay').style.display = 'none';
     
-    // IMPORTANTE: Mostriamo il tasto pausa solo qui
     document.getElementById('pause-btn').style.display = 'block';
     
-    // 8. Avvio Musica e Motore di gioco
     if (musicOn) startBGM();
     
-    // Avvia la logica di gioco (non menu mode)
     init(false);
 }
 
 async function init(isMenuMode = false) {
-    // 1. Pulisci residui
     const container = document.getElementById('game-container');
     const existingCanvas = container.querySelector('canvas');
     if (existingCanvas) existingCanvas.remove(); 
@@ -453,7 +419,6 @@ async function init(isMenuMode = false) {
         options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
     });
     
-    // 2. Setup Pallina (UNA SOLA VOLTA)
     balls = []; 
     addBall();
     
@@ -464,7 +429,6 @@ async function init(isMenuMode = false) {
     gameActive = true; 
     isPaused = false;
 
-    // 3. Gestione UI e Logica basata su modalità
     const uiLayer = document.getElementById('ui-layer');
     const pauseBtn = document.getElementById('pause-btn');
 
@@ -480,7 +444,6 @@ async function init(isMenuMode = false) {
         disableMenuInteractions();
     }
 
-    // 4. Collisioni (Aggiungile solo se NON sei nel menu)
     if (!isMenuMode) {
         Events.on(engine, 'collisionStart', (e) => {
             e.pairs.forEach(p => {
@@ -495,35 +458,29 @@ async function init(isMenuMode = false) {
         });
     }
 
-    // Gestione fisica continua
     Events.on(engine, 'beforeUpdate', () => {
     balls.forEach(ball => {
         const b = ball.position, v = ball.velocity;
         const w = getVpWidth(), h = getVpHeight();
         
-        // Verifica se la pallina è attualmente "fuori" (nei margini)
         const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
 
         if (isCurrentlyTouching) {
-            // Se non stava già suonando, suona ora
             if (!ball.isColliding) {
                 playGlassSfx();
                 ball.isColliding = true;
             }
             
-            // Applica il rimbalzo (la tua logica esistente)
             if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
             else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
             if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
             else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
         } else {
-            // Se la pallina è tornata nel campo, resettiamo il flag
             ball.isColliding = false;
         }
     });
 });
 
-// Sblocca l'audio anche in modalità menu al primo interazione
     if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
     }
@@ -538,7 +495,7 @@ async function init(isMenuMode = false) {
         label: 'ball', 
         render: { fillStyle: '#ffffff' } 
     });
-    ball.isColliding = false; // Flag per gestire il suono
+    ball.isColliding = false;
     balls.push(ball);
     Composite.add(engine.world, ball);
 }
@@ -567,12 +524,11 @@ async function init(isMenuMode = false) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     
-    // Suono cristallino: onda sinusoidale, alta frequenza, decay velocissimo
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime); // Pitch alto e leggermente variabile
+    osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
     
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime); // Molto basso, sottile
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08); // Decay brevissimo
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
     
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -582,9 +538,7 @@ async function init(isMenuMode = false) {
 }
 
         window.addEventListener('devicemotion', (e) => {
-    // Rimosso !isPaused dalla condizione perché nel menu non usiamo la pausa
     if (gameActive && e.accelerationIncludingGravity) {
-        // Se è iOS, invertiamo il segno per allinearlo ad Android
         const multiplier = isIOS ? -1 : 1; 
         
         engine.gravity.x = multiplier * (-e.accelerationIncludingGravity.x * 0.8);
@@ -593,38 +547,30 @@ async function init(isMenuMode = false) {
 });
 
 function changeBgRandom() {
-    // Colori con bassa luminosità (es. HSL con L=5% o 10%)
     const randomHue = Math.floor(Math.random() * 360);
     document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
 }
 
-// 2. Forza il Fullscreen al primo tap (spesso i browser lo bloccano al caricamento)
 document.addEventListener('click', function goFullscreen() {
     const el = document.documentElement;
     if (el.requestFullscreen) el.requestFullscreen();
     else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    document.removeEventListener('click', goFullscreen); // Eseguito solo una volta
+    document.removeEventListener('click', goFullscreen);
 }, { once: true });
 
 
-// Gestione automatica della pausa (richiesta da Poki)
 window.addEventListener('keydown', (ev) => {
-    if (ev.keyCode === 32) { // Esempio: Spazio per mettere in pausa
+    if (ev.keyCode === 32) { 
         togglePause();
     }
 });
 
-// In fondo allo script, avvia la "Modalità Menu"
 document.addEventListener("DOMContentLoaded", () => {
-    // Verifica che non sia già stato inizializzato
     if (!engine) init(true); 
 });
 
-// Se l'utente esce dalla pagina o Poki apre un overlay
-PokiSDK.setDebug(false); // Imposta a true durante lo sviluppo se vuoi log extra
+PokiSDK.setDebug(false); 
 
-// Questo assicura che il gioco si fermi se Poki prende il controllo
-// (ad esempio durante un annuncio o se la finestra perde focus)
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden' && gameActive && !isPaused) {
         togglePause();
