@@ -585,12 +585,7 @@ function changeBgRandom() {
     document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
 }
 
-document.addEventListener('click', function goFullscreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    document.removeEventListener('click', goFullscreen);
-}, { once: true });
+
 
 
 window.addEventListener('keydown', (ev) => {
