@@ -315,39 +315,32 @@ function quitToMenu() {
 }
 
 async function resetGame() {
-
     stopBGM();
     
     PokiSDK.commercialBreak().then(() => {
-        console.log("Fine pubblicità (o saltata): il gioco riprende.");
+        console.log("Fine pubblicità: il gioco riprende.");
 
         cleanupGame();
         
         document.getElementById('game-over').style.display = 'none';
         document.getElementById('pause-btn').style.display = 'block';
 
+        // Avvio diretto senza listener di click extra
         setTimeout(async () => {
+            // Se vuoi forzare il fullscreen qui, fallo semplicemente così:
             try { 
-                if (document.documentElement.requestFullscreen) {
-                    await document.documentElement.requestFullscreen(); 
-                }
+                const el = document.documentElement;
+                if (el.requestFullscreen) await el.requestFullscreen();
             } catch (e) {
-                console.log("Fullscreen not available");
+                console.log("Fullscreen non disponibile");
             }
-            document.addEventListener('click', function goFullscreen() {
-    // ... codice fullscreen ...
-    
-    // Dopo un istante, aggiorna il canvas
-    setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-    }, 500); 
-}, { once: true });
 
+            // Inizializza il motore
             init();
 
+            // Avvia la musica e il gameplay
             if(musicOn) startBGM();
             PokiSDK.gameplayStart(); 
-            
         }, 150);
     });
 }
@@ -443,24 +436,25 @@ async function resetGame() {
     init(false);
 }
 
+let resizeObserver;
+
 async function init(isMenuMode = false) {
     const container = document.getElementById('game-container');
-    
-    // 1. Pulisci il canvas precedente
     const existingCanvas = container.querySelector('canvas');
     if (existingCanvas) existingCanvas.remove(); 
 
-    // 2. Leggi le dimensioni REALI dal DOM (non dal viewport JS)
-    // clientWidth/Height tengono conto del CSS 100dvh applicato
+    // Aspetta che il container abbia dimensioni valide (almeno > 100px)
+    if (container.clientWidth < 100) {
+        setTimeout(() => init(isMenuMode), 50);
+        return;
+    }
+
     const w = container.clientWidth;
     const h = container.clientHeight;
 
     engine = Engine.create();
     engine.enabled = true;
-    engine.gravity.x = 0; 
-    engine.gravity.y = 0;
     
-    // 3. Inizializza il render con le dimensioni precise
     render = Render.create({ 
         element: container, 
         engine: engine, 
@@ -632,21 +626,22 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-window.addEventListener('resize', () => {
-    if (!render) return;
-    
-    const w = getVpWidth();
-    const h = getVpHeight();
-    
-    // Aggiorna le dimensioni del canvas
-    render.canvas.width = w;
-    render.canvas.height = h;
-    render.options.width = w;
-    render.options.height = h;
-    
-    // Se hai muri o bordi statici, dovresti aggiornarli qui, 
-    // ma per il canvas Pong è sufficiente aggiornare le dimensioni del render
+// Usa ResizeObserver per reagire ai cambi di layout reali
+const ro = new ResizeObserver(entries => {
+    for (let entry of entries) {
+        if (render && entry.contentRect.width > 0) {
+            const w = entry.contentRect.width;
+            const h = entry.contentRect.height;
+            
+            render.canvas.width = w;
+            render.canvas.height = h;
+            render.options.width = w;
+            render.options.height = h;
+        }
+    }
 });
+
+ro.observe(document.getElementById('game-container'));
 
     </script>
 </body>
