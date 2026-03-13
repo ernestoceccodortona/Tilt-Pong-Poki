@@ -495,96 +495,94 @@
     });
     ro.observe(container);
     
-    async function init(isMenuMode = false) {
-        const container = document.getElementById('game-container');
-        const existingCanvas = container.querySelector('canvas');
-        if (existingCanvas) existingCanvas.remove(); 
-        
-        if (!container || container.clientWidth < 10) return;
-        
-        // Crea un nuovo engine se è stato distrutto da cleanup
-        if (!engine) engine = Engine.create();
-        
-        const rect = container.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height;
-        
-        render = Render.create({ 
-            element: container, 
-            engine: engine, 
-            options: { 
-                width: w * dpr, 
-                height: h * dpr, 
-                wireframes: false, 
-                background: 'transparent', 
-                pixelRatio: dpr 
-            } 
+   async function init(isMenuMode = false) {
+    const container = document.getElementById('game-container');
+    const existingCanvas = container.querySelector('canvas');
+    if (existingCanvas) existingCanvas.remove(); 
+    
+    if (!container || container.clientWidth < 10) return;
+    
+    if (!engine) engine = Engine.create();
+    
+    const rect = container.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const w = rect.width;
+    const h = rect.height;
+    
+    render = Render.create({ 
+        element: container, 
+        engine: engine, 
+        options: { 
+            width: w * dpr, 
+            height: h * dpr, 
+            wireframes: false, 
+            background: 'transparent', 
+            pixelRatio: dpr 
+        } 
+    });
+    
+    render.canvas.style.width = w + 'px';
+    render.canvas.style.height = h + 'px';
+    
+    // --- MANTENUTO IL TUO LOGICAMENTE ---
+    balls = []; 
+    addBall();
+    
+    Render.run(render); 
+    runner = Runner.create(); 
+    Runner.run(runner, engine);
+    
+    render.canvas.style.opacity = '1'; 
+    render.canvas.classList.add('ready');
+    
+    gameActive = true; 
+    isPaused = false;
+    
+    // Eventi rimasti identici ai tuoi
+    Events.on(engine, 'collisionStart', (e) => {
+        e.pairs.forEach(p => {
+            const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
+            if (b) {
+                playSfx(b.label === 'void_brick' ? 'void' : 'hit');
+                if (b.label === 'void_brick') triggerVoidEffect();
+                Composite.remove(engine.world, b);
+                if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
+            }
         });
-        
-        render.canvas.style.width = w + 'px';
-        render.canvas.style.height = h + 'px';
-        
-        balls = []; 
-        addBall();
-        
-        Render.run(render); 
-        runner = Runner.create(); 
-        Runner.run(runner, engine);
-        
-        render.canvas.style.opacity = '1'; 
-        render.canvas.classList.add('ready');
-        
-        gameActive = true; 
-        isPaused = false;
-        
-        Events.on(engine, 'collisionStart', (e) => {
-            e.pairs.forEach(p => {
-                const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
-                if (b) {
-                    playSfx(b.label === 'void_brick' ? 'void' : 'hit');
-                    if (b.label === 'void_brick') triggerVoidEffect();
-                    Composite.remove(engine.world, b);
-                    if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
-                }
-            });
+    });
+    
+    Events.on(engine, 'beforeUpdate', () => {
+        balls.forEach(ball => {
+            const b = ball.position, v = ball.velocity;
+            const w = render.options.width; 
+            const h = render.options.height;
+            const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
+            if (isCurrentlyTouching) {
+                if (!ball.isColliding) { playSfx('wall'); ball.isColliding = true; }
+                if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+                else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+            } else { ball.isColliding = false; }
         });
-        
-        Events.on(engine, 'beforeUpdate', () => {
-            balls.forEach(ball => {
-                const b = ball.position, v = ball.velocity;
-                const w = render.options.width; 
-                const h = render.options.height;
-                
-                const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
-                if (isCurrentlyTouching) {
-                    if (!ball.isColliding) { playSfx('wall'); ball.isColliding = true; }
-                    if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                    else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                    if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-                    else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-                } else { ball.isColliding = false; }
-            });
-        });
-        
-        const uiLayer = document.getElementById('ui-layer');
-        const pauseBtn = document.getElementById('pause-btn');
-        
-        if (isMenuMode) {
-            uiLayer.style.display = 'none';
-            pauseBtn.style.display = 'none';
-            enableMenuInteractions();
-        } else {
-            uiLayer.style.display = 'flex';
-            pauseBtn.style.display = 'block';
-            spawnLevel(w, h);
-            if (isTimed) startTimer();
-            disableMenuInteractions();
-        }
-        
-        render.canvas.classList.add('ready');
-        
+    });
+
+    // --- GESTIONE VISIBILITÀ SENZA DISPLAY: NONE ---
+    const uiLayer = document.getElementById('ui-layer');
+    const pauseBtn = document.getElementById('pause-btn');
+    
+    if (isMenuMode) {
+        uiLayer.style.visibility = 'hidden';
+        pauseBtn.style.visibility = 'hidden';
+        enableMenuInteractions();
+    } else {
+        uiLayer.style.visibility = 'visible';
+        pauseBtn.style.visibility = 'visible';
+        spawnLevel(w, h);
+        if (isTimed) startTimer();
+        disableMenuInteractions();
     }
+}
     
     function addBall() {
         const container = document.getElementById('game-container');
