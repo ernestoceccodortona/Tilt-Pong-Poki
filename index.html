@@ -464,8 +464,6 @@ async function init(isMenuMode = false) {
     const existingCanvas = container.querySelector('canvas');
     if (existingCanvas) existingCanvas.remove(); 
 
-    // Rimuoviamo la ricorsione qui: se non c'è container, usciamo. 
-    // Sarà l'Observer a richiamare init() quando il container sarà pronto.
     if (!container || container.clientWidth < 10) return;
 
     const rect = container.getBoundingClientRect();
@@ -487,11 +485,10 @@ async function init(isMenuMode = false) {
         } 
     });
 
-    // IMPORTANTE: Assicurati che lo stile del canvas non forzi dimensioni sbagliate
     render.canvas.style.width = '100%';
     render.canvas.style.height = '100%';
     
-    // Inizializza le entità
+    // Inizializza entità: la pallina appare SUBITO
     balls = []; 
     addBall();
     
@@ -503,36 +500,26 @@ async function init(isMenuMode = false) {
     gameActive = true; 
     isPaused = false;
 
-    // Gestione UI e Logica
-    const uiLayer = document.getElementById('ui-layer');
-    const pauseBtn = document.getElementById('pause-btn');
+    const resumeAudio = () => {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        document.removeEventListener('click', resumeAudio);
+        document.removeEventListener('touchstart', resumeAudio);
+    };
+    document.addEventListener('click', resumeAudio);
+    document.addEventListener('touchstart', resumeAudio);
 
-    if (isMenuMode) {
-        uiLayer.style.display = 'none';
-        pauseBtn.style.display = 'none';
-        enableMenuInteractions();
-    } else {
-        uiLayer.style.display = 'flex';
-        pauseBtn.style.display = 'block';
-        spawnLevel(w, h);
-        if (isTimed) startTimer();
-        disableMenuInteractions();
-    }
-
-    // Eventi e Audio
-    if (!isMenuMode) {
-        Events.on(engine, 'collisionStart', (e) => {
-            e.pairs.forEach(p => {
-                const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
-                if (b) {
-                    playSfx(b.label === 'void_brick' ? 'void' : 'hit');
-                    if (b.label === 'void_brick') triggerVoidEffect();
-                    Composite.remove(engine.world, b);
-                    if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
-                }
-            });
+    // EVENTI GLOBALI: Sempre attivi, così la pallina rimbalza anche nel menu
+    Events.on(engine, 'collisionStart', (e) => {
+        e.pairs.forEach(p => {
+            const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
+            if (b) {
+                playSfx(b.label === 'void_brick' ? 'void' : 'hit');
+                if (b.label === 'void_brick') triggerVoidEffect();
+                Composite.remove(engine.world, b);
+                if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
+            }
         });
-    }
+    });
 
     Events.on(engine, 'beforeUpdate', () => {
         balls.forEach(ball => {
@@ -551,6 +538,23 @@ async function init(isMenuMode = false) {
         });
     });
 
+    // Gestione UI Menu vs Gioco
+    const uiLayer = document.getElementById('ui-layer');
+    const pauseBtn = document.getElementById('pause-btn');
+
+    if (isMenuMode) {
+        uiLayer.style.display = 'none';
+        pauseBtn.style.display = 'none';
+        enableMenuInteractions();
+    } else {
+        uiLayer.style.display = 'flex';
+        pauseBtn.style.display = 'block';
+        spawnLevel(w, h);
+        if (isTimed) startTimer();
+        disableMenuInteractions();
+    }
+
+    // Sblocco audio finale
     if (audioCtx.state === 'suspended') await audioCtx.resume();
     render.canvas.classList.add('ready');
 }
