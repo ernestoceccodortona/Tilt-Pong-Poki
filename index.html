@@ -396,6 +396,16 @@ async function resetGame() {
 
         async function startGame(timed) {
     disableMenuInteractions();
+
+    // Forza il Fullscreen SOLO quando l'utente sceglie di giocare
+    try {
+        const el = document.documentElement;
+        if (el.requestFullscreen) await el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+    } catch (e) {
+        console.log("Fullscreen denied");
+    }
+    
     PokiSDK.gameplayStart();
     cleanupGame();
     
@@ -433,6 +443,13 @@ async function resetGame() {
     init(false);
 }
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Inizializza il gioco.
+ * @param {boolean} isMenuMode - True se siamo nel menu, false altrimenti.
+ * @returns {Promise<void>} - La promessa che viene risolta quando il gioco è stato inizializzato.
+ */
+/*******  d3eb2538-95c9-436e-99c6-88ca8b72d37b  *******/
 async function init(isMenuMode = false) {
     const container = document.getElementById('game-container');
     
