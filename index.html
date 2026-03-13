@@ -493,7 +493,7 @@
         render = Render.create({ 
             element: container, 
             engine: engine, 
-            options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: 1 } 
+            options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
         });
         
         render.canvas.style.width = '100%';
