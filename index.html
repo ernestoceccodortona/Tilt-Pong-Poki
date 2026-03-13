@@ -9,166 +9,166 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-
-<style>
-    :root { --bg-color: #000; }
-    * { 
-        box-sizing: border-box; 
-        -webkit-touch-callout: none; 
-        margin: 0; 
-        padding: 0; 
-        touch-action: none; 
-    }
     
-    body, html { 
-        width: 100%; 
-        height: 100dvh; 
-        overflow: hidden; 
-        overscroll-behavior: none;
-        background: var(--bg-color); 
-        font-family: 'Plus Jakarta Sans', sans-serif; 
-        color: white; 
-        user-select: none; 
-        position: fixed; 
-    }
-    
-    #game-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; min-height: 100dvh; }
-   canvas { 
-    /* Rimuovi opacity: 0; e usa visibility o un display control */
-    display: block !important; 
-    width: 100% !important; 
-    height: 100% !important; 
-    z-index: 2; 
-    border: none !important; 
-    position: absolute; 
-    top: 0; 
-    left: 0;
-    /* Forza l'accelerazione hardware */
-    will-change: transform;
-}
-
-    #ui-layer { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        pointer-events: none; 
-        z-index: 10; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        padding-top: 40px; 
-    }
-    
-    #lvl-tag { 
-        font-size: 0.7rem; 
-        letter-spacing: 4px; 
-        opacity: 0.6; 
-        text-transform: uppercase; 
-        margin-bottom: 5px; 
-        font-weight: 600;
-    }
-    
-    #timer-display { 
-        font-size: 4.5rem; 
-        font-weight: 300;
-        letter-spacing: 1px;
-        line-height: 1; 
-    }
-    
-    #pause-btn, #music-btn { 
-        position: absolute; 
-        top: 20px; 
-        z-index: 1000; 
-        padding: 10px 18px; 
-        background: rgba(255, 255, 255, 0.08); 
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 12px;
-        pointer-events: auto; 
-        cursor: pointer; 
-        font-size: 0.65rem; 
-        letter-spacing: 1.5px; 
-        font-weight: 700;
-        text-transform: uppercase;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    #pause-btn { left: 20px; }
-    #music-btn { right: 20px; }
-
-    .menu { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-        background: rgba(0, 0, 0, 0);
-        z-index: 3; 
-        text-align: center; 
-        pointer-events: auto; 
-    }
-
-    #overlay.menu { background: rgba(0, 0, 0, 0); }
-    #pause-menu.menu, #game-over.menu { background: #000; }
-    
-    h1 { 
-        font-weight: 800; 
-        letter-spacing: 8px; 
-        margin-bottom: 40px; 
-        text-transform: uppercase; 
-        font-size: 2.4rem;
-    }
-    
-    .stat-value { 
-        font-size: 1.3rem; 
-        font-weight: 500; 
-        margin-bottom: 30px; 
-        letter-spacing: 1px;
-        color: rgba(255, 255, 255, 0.7);
-    }
-
-    button, #music-btn, #pause-btn{
-        -webkit-tap-highlight-color: transparent;
-        outline: none;
-    }
-    
-    button { 
-        margin: 10px; 
-        padding: 16px 40px; 
-        background: rgba(255, 255, 255, 0.08); 
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        border-radius: 14px; 
-        font-size: 0.85rem; 
-        font-weight: 700; 
-        letter-spacing: 2px; 
-        cursor: pointer; 
-        text-transform: uppercase; 
-        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    button:active {
-        transform: scale(0.92);
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    button[onclick="resetGame()"] {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-    
-</style>
+    <style>
+        :root { --bg-color: #000; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-touch-callout: none; 
+            margin: 0; 
+            padding: 0; 
+            touch-action: none; 
+        }
+        
+        body, html { 
+            width: 100%; 
+            height: 100dvh; 
+            overflow: hidden; 
+            overscroll-behavior: none;
+            background: var(--bg-color); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: white; 
+            user-select: none; 
+            position: fixed; 
+        }
+        
+        #game-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; min-height: 100dvh; }
+        canvas { 
+            /* Rimuovi opacity: 0; e usa visibility o un display control */
+            display: block !important; 
+            width: 100% !important; 
+            height: 100% !important; 
+            z-index: 2; 
+            border: none !important; 
+            position: absolute; 
+            top: 0; 
+            left: 0;
+            /* Forza l'accelerazione hardware */
+            will-change: transform;
+        }
+        
+        #ui-layer { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 10; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 40px; 
+        }
+        
+        #lvl-tag { 
+            font-size: 0.7rem; 
+            letter-spacing: 4px; 
+            opacity: 0.6; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            font-weight: 600;
+        }
+        
+        #timer-display { 
+            font-size: 4.5rem; 
+            font-weight: 300;
+            letter-spacing: 1px;
+            line-height: 1; 
+        }
+        
+        #pause-btn, #music-btn { 
+            position: absolute; 
+            top: 20px; 
+            z-index: 1000; 
+            padding: 10px 18px; 
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            pointer-events: auto; 
+            cursor: pointer; 
+            font-size: 0.65rem; 
+            letter-spacing: 1.5px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        #pause-btn { left: 20px; }
+        #music-btn { right: 20px; }
+        
+        .menu { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: rgba(0, 0, 0, 0);
+            z-index: 3; 
+            text-align: center; 
+            pointer-events: auto; 
+        }
+        
+        #overlay.menu { background: rgba(0, 0, 0, 0); }
+        #pause-menu.menu, #game-over.menu { background: #000; }
+        
+        h1 { 
+            font-weight: 800; 
+            letter-spacing: 8px; 
+            margin-bottom: 40px; 
+            text-transform: uppercase; 
+            font-size: 2.4rem;
+        }
+        
+        .stat-value { 
+            font-size: 1.3rem; 
+            font-weight: 500; 
+            margin-bottom: 30px; 
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        button, #music-btn, #pause-btn{
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        button { 
+            margin: 10px; 
+            padding: 16px 40px; 
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 14px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        button:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        button[onclick="resetGame()"] {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+    </style>
 </head>
 <body>
-
+    
     <div id="game-container">
         <div id="music-btn" onclick="toggleMusic()">MUSIC: ON</div>
         
@@ -177,19 +177,19 @@
             <div id="timer-display">20</div>
         </div>
         <div id="pause-btn" style="display:none;" onclick="togglePause()">PAUSE</div>
-
+        
         <div id="overlay" class="menu">
             <h1>TILT PONG</h1>
             <button onclick="startGame(true)">Enter</button>
             <button onclick="startGame(false)">Practice Mode</button>
         </div>
-
+        
         <div id="pause-menu" class="menu" style="display:none;">
             <h1>PAUSED</h1>
             <button onclick="togglePause()">Resume</button>
             <button onclick="quitToMenu()">Quit</button>
         </div>
-
+        
         <div id="game-over" class="menu" style="display:none;">
             <h1 style="color: #ff3b30; letter-spacing: 8px;">Time Out</h1>
             <div id="final-score" class="stat-value">0</div>
@@ -197,40 +197,40 @@
             <button onclick="quitToMenu()">Quit</button>
         </div>
     </div>
-
+    
     <script>
-
-PokiSDK.init().then(() => {
-    console.log("Poki SDK pronto");
-    PokiSDK.gameLoadingFinished();
-}).catch(() => {
-    console.log("Poki SDK non caricato");
-});
-
-PokiSDK.setDebug(true);
-
-
-function handleBgTap(e) {
-    if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
-        changeBgRandom();
-    }
-}
-
-let savedVelocity = { x: 0, y: 0 };
-
-function enableMenuInteractions() {
-    document.body.addEventListener('click', handleBgTap);
-}
-
-function disableMenuInteractions() {
-    document.body.removeEventListener('click', handleBgTap);
-}
-
-
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-
+        
+        PokiSDK.init().then(() => {
+            console.log("Poki SDK pronto");
+            PokiSDK.gameLoadingFinished();
+        }).catch(() => {
+            console.log("Poki SDK non caricato");
+        });
+        
+        PokiSDK.setDebug(true);
+        
+        
+        function handleBgTap(e) {
+            if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
+                changeBgRandom();
+            }
+        }
+        
+        let savedVelocity = { x: 0, y: 0 };
+        
+        function enableMenuInteractions() {
+            document.body.addEventListener('click', handleBgTap);
+        }
+        
+        function disableMenuInteractions() {
+            document.body.removeEventListener('click', handleBgTap);
+        }
+        
+        
+        
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        
         const { Engine, Render, Runner, Bodies, Composite, Events, Body } = Matter;
         let engine, render, runner, balls = [], isTimed = true, gameActive = false, isPaused = false, timerInterval;
         let currentLevel = 1, timeLeft = 20;
@@ -239,26 +239,25 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
         let bgmInterval = null;
         let musicOn = true;
         let noteCounter = 0;
-
-        // Listener unico per sbloccare i soli suoni (SFX) al primo tocco
-const unlockSfx = async () => {
-    if (audioCtx.state === 'suspended') {
-        await audioCtx.resume();
-    }
-    document.removeEventListener('click', unlockSfx);
-    document.removeEventListener('touchstart', unlockSfx);
-};
-document.addEventListener('click', unlockSfx);
-document.addEventListener('touchstart', unlockSfx);
-
+        
+        const unlockSfx = async () => {
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+            document.removeEventListener('click', unlockSfx);
+            document.removeEventListener('touchstart', unlockSfx);
+        };
+        document.addEventListener('click', unlockSfx);
+        document.addEventListener('touchstart', unlockSfx);
+        
         function startBGM() {
-    if (bgmInterval || !musicOn) return;
-    
-    noteCounter = 0; 
-    
-    const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
-    const bass = [165, 147, 131, 196];
-
+            if (bgmInterval || !musicOn) return;
+            
+            noteCounter = 0; 
+            
+            const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
+            const bass = [165, 147, 131, 196];
+            
             bgmInterval = setInterval(() => {
                 const time = audioCtx.currentTime;
                 const oscMel = audioCtx.createOscillator();
@@ -269,7 +268,7 @@ document.addEventListener('touchstart', unlockSfx);
                 gainMel.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
                 oscMel.connect(gainMel); gainMel.connect(audioCtx.destination);
                 oscMel.start(); oscMel.stop(time + 0.4);
-
+                
                 if (noteCounter % 4 === 0) {
                     const oscBass = audioCtx.createOscillator();
                     const gainBass = audioCtx.createGain();
@@ -283,364 +282,349 @@ document.addEventListener('touchstart', unlockSfx);
                 noteCounter++;
             }, 300);
         }
-
+        
         function stopBGM() {
             if (bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
         }
-
+        
         function toggleMusic() {
             musicOn = !musicOn;
             document.getElementById('music-btn').innerText = musicOn ? "MUSIC: ON" : "MUSIC: OFF";
             musicOn ? startBGM() : stopBGM();
         }
-
-function cleanupGame() {
-    const container = document.getElementById('game-container');
-    const canvases = container.querySelectorAll('canvas');
-    canvases.forEach(c => c.remove());
-
-    gameActive = false;
-    clearInterval(timerInterval);
-    
-    stopBGM();
-    noteCounter = 0;
-    
-    document.body.style.setProperty('--bg-color', '#000');
-    
-    if (runner) {
-        Runner.stop(runner);
-        runner = null;
+        
+        function cleanupGame() {
+            const container = document.getElementById('game-container');
+            const canvases = container.querySelectorAll('canvas');
+            canvases.forEach(c => c.remove());
+            
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            stopBGM();
+            noteCounter = 0;
+            
+            document.body.style.setProperty('--bg-color', '#000');
+            
+            if (runner) {
+                Runner.stop(runner);
+                runner = null;
+            }
+            
+            if (render) {
+                Render.stop(render);
+                if (render.canvas) render.canvas.remove();
+                render = null;
+            }
+            
+            if (engine) {
+                Composite.clear(engine.world, false);
+                engine = null;
+            }
+            
+            currentLevel = 1;
+            timeLeft = 20;
+            document.getElementById('lvl-num').innerText = currentLevel;
+            document.getElementById('timer-display').innerText = timeLeft;
+            document.getElementById('timer-display').style.display = 'block';
+        }
+        
+        function quitToMenu() {
+            PokiSDK.gameplayStop();
+            cleanupGame();
+            
+            document.getElementById('ui-layer').style.display = 'none';
+            document.getElementById('pause-btn').style.display = 'none';
+            document.getElementById('pause-menu').style.display = 'none';
+            document.getElementById('game-over').style.display = 'none';
+            document.getElementById('overlay').style.display = 'flex';
+            
+            init(true); 
+        }
+        
+        async function resetGame() {
+            stopBGM();
+            
+            PokiSDK.commercialBreak().then(() => {
+                console.log("Fine pubblicità: il gioco riprende.");
+                
+                cleanupGame();
+                
+                document.getElementById('game-over').style.display = 'none';
+                document.getElementById('pause-btn').style.display = 'block';
+                
+                setTimeout(async () => {
+                    try { 
+                        const el = document.documentElement;
+                        if (el.requestFullscreen) await el.requestFullscreen();
+                    } catch (e) {
+                        console.log("Fullscreen non disponibile");
+                    }
+                    
+                    init();
+                    
+                    if(musicOn) startBGM();
+                    PokiSDK.gameplayStart(); 
+                }, 150);
+            });
+        }
+        
+        function togglePause() {
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                balls.forEach(b => {
+                    savedVelocity = { x: b.velocity.x, y: b.velocity.y };
+                    Body.setStatic(b, true); 
+                });
+                
+                engine.enabled = false;
+                clearInterval(timerInterval);
+                stopBGM();
+            } else {
+                engine.enabled = true;
+                balls.forEach(b => {
+                    Body.setStatic(b, false);
+                    Body.setVelocity(b, savedVelocity);
+                });
+                
+                if (isTimed) startTimer();
+                if (musicOn) startBGM();
+            }
+            
+            document.getElementById('pause-menu').style.display = isPaused ? 'flex' : 'none';
+        }
+        
+        function playGlassSfx(type) { // <--- Aggiungi 'type' qui
+        if (audioCtx.state !== 'running') return; 
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        
+        if (type === 'hit') { osc.frequency.setValueAtTime(440, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); }
+        else if (type === 'void') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2); }
+        else if (type === 'bonus') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.3); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); }
+        else if (type === 'gameover') { osc.type = 'square'; osc.frequency.setValueAtTime(200, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.5); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); }
+        
+        osc.start(); osc.stop(audioCtx.currentTime + 0.5);
     }
     
-    if (render) {
-        Render.stop(render);
-        if (render.canvas) render.canvas.remove();
-        render = null;
-    }
-    
-    if (engine) {
-        Composite.clear(engine.world, false);
-        engine = null;
-    }
-    
-    currentLevel = 1;
-    timeLeft = 20;
-    document.getElementById('lvl-num').innerText = currentLevel;
-    document.getElementById('timer-display').innerText = timeLeft;
-    document.getElementById('timer-display').style.display = 'block';
-}
-
-function quitToMenu() {
-    PokiSDK.gameplayStop();
-    cleanupGame();
-    
-    document.getElementById('ui-layer').style.display = 'none';
-    document.getElementById('pause-btn').style.display = 'none';
-    document.getElementById('pause-menu').style.display = 'none';
-    document.getElementById('game-over').style.display = 'none';
-    document.getElementById('overlay').style.display = 'flex';
-    
-    init(true); 
-}
-
-async function resetGame() {
-    stopBGM();
-    
-    PokiSDK.commercialBreak().then(() => {
-        console.log("Fine pubblicità: il gioco riprende.");
-
+    async function startGame(timed) {
+        disableMenuInteractions();
+        
+        try {
+            const el = document.documentElement;
+            if (el.requestFullscreen) await el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+        } catch (e) {
+            console.log("Fullscreen denied");
+        }
+        
+        PokiSDK.gameplayStart();
         cleanupGame();
         
-        document.getElementById('game-over').style.display = 'none';
-        document.getElementById('pause-btn').style.display = 'block';
-
-        // Avvio diretto senza listener di click extra
-        setTimeout(async () => {
-            // Se vuoi forzare il fullscreen qui, fallo semplicemente così:
-            try { 
-                const el = document.documentElement;
-                if (el.requestFullscreen) await el.requestFullscreen();
+        document.body.style.setProperty('--bg-color', '#000');
+        
+        if (audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+        }
+        
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+            try {
+                const permissionState = await DeviceMotionEvent.requestPermission();
+                if (permissionState !== 'granted') console.log("Permesso giroscopio negato");
             } catch (e) {
-                console.log("Fullscreen non disponibile");
+                console.error("Errore permessi sensori:", e);
             }
-
-            // Inizializza il motore
-            init();
-
-            // Avvia la musica e il gameplay
-            if(musicOn) startBGM();
-            PokiSDK.gameplayStart(); 
-        }, 150);
-    });
-}
-
-        function togglePause() {
-    isPaused = !isPaused;
-    
-    if (isPaused) {
-        // Blocca la pallina
-        balls.forEach(b => {
-            savedVelocity = { x: b.velocity.x, y: b.velocity.y };
-            Body.setStatic(b, true); 
-        });
-        
-        engine.enabled = false;
-        clearInterval(timerInterval);
-        stopBGM();
-    } else {
-        // Sblocca la pallina e ripristina il moto
-        engine.enabled = true;
-        balls.forEach(b => {
-            Body.setStatic(b, false);
-            Body.setVelocity(b, savedVelocity);
-        });
-        
-        if (isTimed) startTimer();
-        if (musicOn) startBGM();
-    }
-    
-    document.getElementById('pause-menu').style.display = isPaused ? 'flex' : 'none';
-}
-
-        function getVpWidth() { return window.visualViewport ? window.visualViewport.width : window.innerWidth; }
-        function getVpHeight() { return window.visualViewport ? window.visualViewport.height : window.innerHeight; }
-
-        function playGlassSfx() {
-    // Aggiungi questo controllo all'inizio:
-    if (audioCtx.state !== 'running') return; 
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            if (type === 'hit') { osc.frequency.setValueAtTime(440, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); }
-            else if (type === 'void') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2); }
-            else if (type === 'bonus') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.3); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); }
-            else if (type === 'gameover') { osc.type = 'square'; osc.frequency.setValueAtTime(200, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.5); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); }
-            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
         }
-
-        async function startGame(timed) {
-    disableMenuInteractions();
-
-    // Forza il Fullscreen SOLO quando l'utente sceglie di giocare
-    try {
-        const el = document.documentElement;
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-    } catch (e) {
-        console.log("Fullscreen denied");
-    }
-    
-    PokiSDK.gameplayStart();
-    cleanupGame();
-    
-    document.body.style.setProperty('--bg-color', '#000');
-
-    if (audioCtx.state === 'suspended') {
-        await audioCtx.resume();
-    }
-
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        
         try {
-            const permissionState = await DeviceMotionEvent.requestPermission();
-            if (permissionState !== 'granted') console.log("Permesso giroscopio negato");
+            const el = document.documentElement;
+            if (el.requestFullscreen) await el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
         } catch (e) {
-            console.error("Errore permessi sensori:", e);
+            console.log("Fullscreen denied or not supported");
+        }
+        
+        isTimed = timed;
+        document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
+        document.getElementById('overlay').style.display = 'none';
+        
+        document.getElementById('pause-btn').style.display = 'block';
+        
+        if (musicOn) startBGM(); 
+        
+        isTimed = timed;
+        
+        init(false);
+    }
+    
+    let resizeObserver;
+    
+    function updateWorldDimensions(w, h) {
+        if (!render) return;
+        
+        render.canvas.width = w;
+        render.canvas.height = h;
+        render.options.width = w;
+        render.options.height = h;
+        
+        render.bounds.max.x = w;
+        render.bounds.max.y = h;
+    }
+    
+    async function init(isMenuMode = false) {
+        const container = document.getElementById('game-container');
+        const existingCanvas = container.querySelector('canvas');
+        if (existingCanvas) existingCanvas.remove(); 
+        
+        if (!container || container.clientWidth < 10) return;
+        
+        const rect = container.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        
+        engine = Engine.create();
+        engine.gravity.y = 0;
+        engine.gravity.x = 0;
+        
+        render = Render.create({ 
+            element: container, 
+            engine: engine, 
+            options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: 1 } 
+        });
+        
+        render.canvas.style.width = '100%';
+        render.canvas.style.height = '100%';
+        
+        balls = []; 
+        addBall();
+        
+        Render.run(render); 
+        runner = Runner.create(); 
+        Runner.run(runner, engine);
+        
+        render.canvas.style.opacity = '1'; 
+        render.canvas.classList.add('ready');
+        
+        gameActive = true; 
+        isPaused = false;
+        
+        Events.on(engine, 'collisionStart', (e) => {
+            e.pairs.forEach(p => {
+                const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
+                if (b) {
+                    playSfx(b.label === 'void_brick' ? 'void' : 'hit');
+                    if (b.label === 'void_brick') triggerVoidEffect();
+                    Composite.remove(engine.world, b);
+                    if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
+                }
+            });
+        });
+        
+        Events.on(engine, 'beforeUpdate', () => {
+    balls.forEach(ball => {
+        const b = ball.position, v = ball.velocity;
+        const w = render.options.width; 
+        const h = render.options.height;
+        
+        const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
+        if (isCurrentlyTouching) {
+            // Usa playSfx('wall') invece di playGlassSfx
+            if (!ball.isColliding) { playSfx('wall'); ball.isColliding = true; }
+                    if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                    else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                    if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+                    else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+                } else { ball.isColliding = false; }
+            });
+        });
+        
+        const uiLayer = document.getElementById('ui-layer');
+        const pauseBtn = document.getElementById('pause-btn');
+        
+        if (isMenuMode) {
+            uiLayer.style.display = 'none';
+            pauseBtn.style.display = 'none';
+            enableMenuInteractions();
+        } else {
+            uiLayer.style.display = 'flex';
+            pauseBtn.style.display = 'block';
+            spawnLevel(w, h);
+            if (isTimed) startTimer();
+            disableMenuInteractions();
+        }
+        
+        render.canvas.classList.add('ready');
+        
+    }
+    
+    function addBall() {
+        const w = render ? render.options.width : window.innerWidth;
+        const h = render ? render.options.height : window.innerHeight;
+        const centerX = w / 2;
+        const centerY = h / 2;
+        
+        const ball = Bodies.circle(centerX, centerY, 12, { 
+            restitution: 0.8, 
+            friction: 0, 
+            frictionAir: 0, 
+            isStatic: false, 
+            label: 'ball', 
+            render: { fillStyle: '#ffffff' } 
+        });
+        
+        ball.isColliding = false;
+        balls.push(ball);
+        Composite.add(engine.world, ball);
+        
+        Body.setVelocity(ball, { x: 5, y: 5 }); 
+    }
+    
+    function spawnLevel(w, h) {
+        const colors = ['#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
+        for(let i = 0; i < 6 + currentLevel; i++) {
+            const isVoid = (i < 2 && Math.random() > 0.7);
+            Composite.add(engine.world, Bodies.rectangle(Math.floor(50 + Math.random()*(w-100)), Math.floor(160 + Math.random()*(h-280)), 65, 28, {
+                isStatic: true, label: isVoid ? 'void_brick' : 'brick', chamfer: { radius: 6 },
+                render: { fillStyle: isVoid ? 'transparent' : colors[i%colors.length], strokeStyle: isVoid ? '#fff' : 'transparent', lineWidth: isVoid ? 2 : 0 }
+            }));
         }
     }
-
-    try {
-        const el = document.documentElement;
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-    } catch (e) {
-        console.log("Fullscreen denied or not supported");
-    }
-
-    isTimed = timed;
-    document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
-    document.getElementById('overlay').style.display = 'none';
     
-    document.getElementById('pause-btn').style.display = 'block';
-    
-    if (musicOn) startBGM(); 
-    
-    isTimed = timed;
-    
-    init(false);
-}
-
-let resizeObserver;
-
-function updateWorldDimensions(w, h) {
-    if (!render) return;
-    
-    render.canvas.width = w;
-    render.canvas.height = h;
-    render.options.width = w;
-    render.options.height = h;
-    
-    // AGGIORNAMENTO: Non toccare i bounds.max manualmente
-    // Matter.js gestisce i bounds internamente in base a render.options
-    render.bounds.max.x = w;
-    render.bounds.max.y = h;
-}
-
-async function init(isMenuMode = false) {
-    const container = document.getElementById('game-container');
-    const existingCanvas = container.querySelector('canvas');
-    if (existingCanvas) existingCanvas.remove(); 
-
-    if (!container || container.clientWidth < 10) return;
-
-    const rect = container.getBoundingClientRect();
-    const w = rect.width;
-    const h = rect.height;
-
-    engine = Engine.create();
-    // Aggiungi questo: disabilita la gravità del motore se vuoi che la pallina fluttui 
-    // o lasciala se vuoi che cada (nel tuo caso è 0 via devicemotion)
-    engine.gravity.y = 0;
-    engine.gravity.x = 0;
-    
-    render = Render.create({ 
-        element: container, 
-        engine: engine, 
-        options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: 1 } 
-    });
-
-    render.canvas.style.width = '100%';
-    render.canvas.style.height = '100%';
-    
-    // Inizializza entità
-    balls = []; 
-    addBall();
-    
-    // AVVIO IMMEDIATO
-    Render.run(render); 
-    runner = Runner.create(); 
-    Runner.run(runner, engine);
-    
-    // --- FORZA LA VISIBILITÀ IMMEDIATAMENTE ---
-    render.canvas.style.opacity = '1'; 
-    render.canvas.classList.add('ready');
-
-    gameActive = true; 
-    isPaused = false;
-
-    // EVENTI GLOBALI: Sempre attivi, così la pallina rimbalza anche nel menu
-    Events.on(engine, 'collisionStart', (e) => {
-        e.pairs.forEach(p => {
-            const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
-            if (b) {
-                playSfx(b.label === 'void_brick' ? 'void' : 'hit');
-                if (b.label === 'void_brick') triggerVoidEffect();
-                Composite.remove(engine.world, b);
-                if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
-            }
-        });
-    });
-
-    Events.on(engine, 'beforeUpdate', () => {
-        balls.forEach(ball => {
-            const b = ball.position, v = ball.velocity;
-            const w = render.options.width; 
-            const h = render.options.height;
-            
-            const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
-            if (isCurrentlyTouching) {
-                if (!ball.isColliding) { playGlassSfx(); ball.isColliding = true; }
-                if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-                if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-                else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-            } else { ball.isColliding = false; }
-        });
-    });
-
-    // Gestione UI Menu vs Gioco
-    const uiLayer = document.getElementById('ui-layer');
-    const pauseBtn = document.getElementById('pause-btn');
-
-    if (isMenuMode) {
-        uiLayer.style.display = 'none';
-        pauseBtn.style.display = 'none';
-        enableMenuInteractions();
-    } else {
-        uiLayer.style.display = 'flex';
-        pauseBtn.style.display = 'block';
-        spawnLevel(w, h);
-        if (isTimed) startTimer();
-        disableMenuInteractions();
-    }
-
-    render.canvas.classList.add('ready');
-
-}
-
-function addBall() {
-    // Definiamo correttamente il centro
-    const w = render ? render.options.width : window.innerWidth;
-    const h = render ? render.options.height : window.innerHeight;
-    const centerX = w / 2;
-    const centerY = h / 2;
-
-    const ball = Bodies.circle(centerX, centerY, 12, { 
-        restitution: 0.8, 
-        friction: 0, 
-        frictionAir: 0, 
-        isStatic: false, 
-        label: 'ball', 
-        render: { fillStyle: '#ffffff' } 
-    });
-    
-    ball.isColliding = false;
-    balls.push(ball);
-    Composite.add(engine.world, ball);
-
-    // --- AGGIUNTA FONDAMENTALE ---
-    // Diamo una velocità iniziale immediata. 
-    // Anche un valore piccolo come 2,2 forza il motore a calcolare il primo movimento
-    // e "sveglia" il rendering su Android.
-    Body.setVelocity(ball, { x: 5, y: 5 }); 
-}
-
-        function spawnLevel(w, h) {
-            const colors = ['#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
-            for(let i = 0; i < 6 + currentLevel; i++) {
-                const isVoid = (i < 2 && Math.random() > 0.7);
-                Composite.add(engine.world, Bodies.rectangle(Math.floor(50 + Math.random()*(w-100)), Math.floor(160 + Math.random()*(h-280)), 65, 28, {
-                    isStatic: true, label: isVoid ? 'void_brick' : 'brick', chamfer: { radius: 6 },
-                    render: { fillStyle: isVoid ? 'transparent' : colors[i%colors.length], strokeStyle: isVoid ? '#fff' : 'transparent', lineWidth: isVoid ? 2 : 0 }
-                }));
-            }
-        }
-
-        function triggerVoidEffect() {
-    document.body.style.setProperty('--bg-color', `hsl(${Math.random()*360}, 40%, 5%)`);
-    // Usa le dimensioni del render invece di getVpWidth()
-    const w = render.options.width;
-    const h = render.options.height;
-    engine.world.bodies.filter(b => b.label === 'brick').forEach(b => 
+    function triggerVoidEffect() {
+        document.body.style.setProperty('--bg-color', `hsl(${Math.random()*360}, 40%, 5%)`);
+        const w = render.options.width;
+        const h = render.options.height;
+        engine.world.bodies.filter(b => b.label === 'brick').forEach(b => 
         Body.setPosition(b, { x: 50 + Math.random()*(w-100), y: 160 + Math.random()*(h-280) })
-    );
-}
-
-        function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = timeLeft; if (timeLeft <= 0) gameOver(); }, 1000); }
-        function levelWin() { currentLevel++; if (currentLevel % 5 === 0) { addBall(); playSfx('bonus'); } if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); document.getElementById('lvl-num').innerText = currentLevel; spawnLevel(render.options.width, render.options.height);}
-        function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
-
-function playSfx(type) {
+        );
+    }
+    
+    function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = timeLeft; if (timeLeft <= 0) gameOver(); }, 1000); }
+    function levelWin() { currentLevel++; if (currentLevel % 5 === 0) { addBall(); playSfx('bonus'); } if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); document.getElementById('lvl-num').innerText = currentLevel; spawnLevel(render.options.width, render.options.height);}
+    function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
+    
+    function playSfx(type) {
     if (audioCtx.state !== 'running') return; 
-
+    
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.connect(gain); gain.connect(audioCtx.destination);
-
+    
     if (type === 'hit') { 
         osc.frequency.setValueAtTime(440, audioCtx.currentTime); 
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); 
-    } else if (type === 'void') { 
+    } 
+    // AGGIUNTA: Il suono per il muro
+    else if (type === 'wall') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    }
+    else if (type === 'void') { 
         osc.type = 'sawtooth'; 
         osc.frequency.setValueAtTime(220, audioCtx.currentTime); 
         osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); 
@@ -658,80 +642,58 @@ function playSfx(type) {
     }
     osc.start(); osc.stop(audioCtx.currentTime + 0.5);
 }
-
-
-        function playGlassSfx() {
-    // Aggiungi questo controllo all'inizio:
-    if (audioCtx.state !== 'running') return; 
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
     
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
-    
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-    
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.1);
-}
-
-        window.addEventListener('devicemotion', (e) => {
-    if (gameActive && e.accelerationIncludingGravity) {
-        const multiplier = isIOS ? -1 : 1; 
-        
-        engine.gravity.x = multiplier * (-e.accelerationIncludingGravity.x * 0.8);
-        engine.gravity.y = multiplier * (e.accelerationIncludingGravity.y * 0.8);
-    }
-});
-
-function changeBgRandom() {
-    const randomHue = Math.floor(Math.random() * 360);
-    document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
-}
-
-document.addEventListener('click', function goFullscreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    document.removeEventListener('click', goFullscreen);
-}, { once: true });
-
-
-window.addEventListener('keydown', (ev) => {
-    if (ev.keyCode === 32) { 
-        togglePause();
-    }
-});
-
-// Unico punto di ingresso per il ridimensionamento
-let isInitializing = false; // Aggiungi questa variabile globale
-
-const container = document.getElementById('game-container');
-const ro = new ResizeObserver(entries => {
-    const { width, height } = entries[0].contentRect;
-    if (width > 0 && height > 0) {
-        if (!engine) {
-            init(true); // Rimosso async/await, chiamala in modo sincrono
-        } else {
-            updateWorldDimensions(width, height);
+    window.addEventListener('devicemotion', (e) => {
+        if (gameActive && e.accelerationIncludingGravity) {
+            const multiplier = isIOS ? -1 : 1; 
+            
+            engine.gravity.x = multiplier * (-e.accelerationIncludingGravity.x * 0.8);
+            engine.gravity.y = multiplier * (e.accelerationIncludingGravity.y * 0.8);
         }
+    });
+    
+    function changeBgRandom() {
+        const randomHue = Math.floor(Math.random() * 360);
+        document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
     }
-});
-ro.observe(container);
-
-PokiSDK.setDebug(false); 
-
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && gameActive && !isPaused) {
-        togglePause();
-    }
-});
-
-    </script>
+    
+    document.addEventListener('click', function goFullscreen() {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        document.removeEventListener('click', goFullscreen);
+    }, { once: true });
+    
+    
+    window.addEventListener('keydown', (ev) => {
+        if (ev.keyCode === 32) { 
+            togglePause();
+        }
+    });
+    
+    let isInitializing = false; // Aggiungi questa variabile globale
+    
+    const container = document.getElementById('game-container');
+    const ro = new ResizeObserver(entries => {
+        const { width, height } = entries[0].contentRect;
+        if (width > 0 && height > 0) {
+            if (!engine) {
+                init(true); // Rimosso async/await, chiamala in modo sincrono
+            } else {
+                updateWorldDimensions(width, height);
+            }
+        }
+    });
+    ro.observe(container);
+    
+    PokiSDK.setDebug(false); 
+    
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden' && gameActive && !isPaused) {
+            togglePause();
+        }
+    });
+    
+</script>
 </body>
 </html>
