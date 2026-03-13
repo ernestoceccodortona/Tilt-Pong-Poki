@@ -465,19 +465,21 @@
     
     function updateWorldDimensions(w, h) {
     if (!render) return;
-    const dpr = window.devicePixelRatio || 1;
     
-    // Aggiorna risoluzione interna
-    render.canvas.width = w * dpr;
-    render.canvas.height = h * dpr;
+    // Aggiorna le dimensioni del render
+    render.canvas.width = w;
+    render.canvas.height = h;
+    render.options.width = w;
+    render.options.height = h;
     
-    // Aggiorna dimensioni visualizzate (CSS)
-    render.canvas.style.width = w + 'px';
-    render.canvas.style.height = h + 'px';
+    // AGGIORNAMENTO CRITICO: Aggiorna i confini del mondo fisico
+    render.bounds.max.x = w;
+    render.bounds.max.y = h;
     
-    // Aggiorna i limiti del renderer
-    render.bounds.max.x = w * dpr;
-    render.bounds.max.y = h * dpr;
+    // Se hai creato dei muri invisibili per delimitare il gioco, 
+    // dovresti riposizionarli qui. 
+    // Nota: nel tuo codice gestisci le collisioni bordi nell'evento 'beforeUpdate'
+    // usando getVpWidth() e getVpHeight(), che ora sono superflui.
 }
     
     async function init(isMenuMode = false) {
@@ -571,12 +573,12 @@ render.canvas.style.height = h + 'px';
     }
     
     function addBall() {
-    // Usa il clientWidth del container, che non è moltiplicato per il dpr
-    const container = document.getElementById('game-container');
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    
-    const ball = Bodies.circle(w / 2, h / 2, 12, { ... });
+        const w = render ? render.options.width : window.innerWidth;
+        const h = render ? render.options.height : window.innerHeight;
+        const centerX = w / 2;
+        const centerY = h / 2;
+        
+        const ball = Bodies.circle(centerX, centerY, 12, { 
             restitution: 0.8, 
             friction: 0, 
             frictionAir: 0, 
@@ -613,26 +615,7 @@ render.canvas.style.height = h + 'px';
     }
     
     function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = timeLeft; if (timeLeft <= 0) gameOver(); }, 1000); }
-
-
-    function levelWin() {
-    currentLevel++; 
-    
-    if (currentLevel % 5 === 0) { 
-        addBall(); 
-        playSfx('bonus'); 
-    } 
-    
-    if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); 
-    
-    document.getElementById('lvl-num').innerText = currentLevel; 
-    
-    // CORREZIONE: usa le dimensioni logiche del contenitore
-    const container = document.getElementById('game-container');
-    spawnLevel(container.clientWidth, container.clientHeight);
-}
-
-
+    function levelWin() { currentLevel++; if (currentLevel % 5 === 0) { addBall(); playSfx('bonus'); } if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); document.getElementById('lvl-num').innerText = currentLevel; spawnLevel(render.options.width, render.options.height);}
     function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
     
     function playSfx(type) {
@@ -691,6 +674,8 @@ render.canvas.style.height = h + 'px';
             togglePause();
         }
     });
+    
+    let isInitializing = false; // Aggiungi questa variabile globale
     
     const container = document.getElementById('game-container');
     const ro = new ResizeObserver(entries => {
