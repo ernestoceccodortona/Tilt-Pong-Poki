@@ -9,149 +9,149 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-
-<style>
-    :root { --bg-color: #000; }
-    * { 
-        box-sizing: border-box; 
-        -webkit-touch-callout: none; 
-        margin: 0; 
-        padding: 0; 
-        touch-action: none; 
-    }
     
-    body, html { 
-        width: 100%; 
-        height: 100%; 
-        overflow: hidden; 
-        background: var(--bg-color); 
-        font-family: 'Plus Jakarta Sans', sans-serif; 
-        color: white; 
-        user-select: none; 
-        position: fixed;
-        overscroll-behavior: none;
-    }
-    
-    #game-container { position: relative; top: 0; left: 0; width: 100vw; height: 100svh; z-index: 1; }
-    canvas { display: block !important; width: 100% !important; height: 100svh !important; z-index: 2; border: none !important; position: absolute; top: 0; left: 0; overscroll-behavior: none;}
-    
-    #ui-layer { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        pointer-events: none; 
-        z-index: 10; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        padding-top: 40px; 
-    }
-    
-    #lvl-tag { 
-        font-size: 0.7rem; 
-        letter-spacing: 4px; 
-        opacity: 0.6; 
-        text-transform: uppercase; 
-        margin-bottom: 5px; 
-        font-weight: 600;
-    }
-    
-    #timer-display { 
-        font-size: 4.5rem; 
-        font-weight: 300;
-        letter-spacing: 1px;
-        line-height: 1; 
-    }
-    
-    #pause-btn, #music-btn { 
-        position: absolute; 
-        top: 20px; 
-        z-index: 1000; 
-        padding: 10px 18px; 
-        background: rgba(255, 255, 255, 0.08); 
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 12px;
-        pointer-events: auto; 
-        cursor: pointer; 
-        font-size: 0.65rem; 
-        letter-spacing: 1.5px; 
-        font-weight: 700;
-        text-transform: uppercase;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    #pause-btn { left: 20px; }
-    #music-btn { right: 20px; }
-
-    .menu { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        align-items: center; 
-        background: rgba(0, 0, 0, 0);
-        z-index: 3; 
-        text-align: center; 
-        pointer-events: auto; 
-    }
-
-    #overlay.menu { background: rgba(0, 0, 0, 0); }
-    #pause-menu.menu, #game-over.menu { background: #000; }
-    
-    h1 { 
-        font-weight: 800; 
-        letter-spacing: 8px; 
-        margin-bottom: 40px; 
-        text-transform: uppercase; 
-        font-size: 2.4rem;
-    }
-    
-    .stat-value { 
-        font-size: 1.3rem; 
-        font-weight: 500; 
-        margin-bottom: 30px; 
-        letter-spacing: 1px;
-        color: rgba(255, 255, 255, 0.7);
-    }
-    
-    button { 
-        margin: 10px; 
-        padding: 16px 40px; 
-        background: rgba(255, 255, 255, 0.08); 
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        border-radius: 14px; 
-        font-size: 0.85rem; 
-        font-weight: 700; 
-        letter-spacing: 2px; 
-        cursor: pointer; 
-        text-transform: uppercase; 
-        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    button:active {
-        transform: scale(0.92);
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    button[onclick="resetGame()"] {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-    
-</style>
+    <style>
+        :root { --bg-color: #000; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-touch-callout: none; 
+            margin: 0; 
+            padding: 0; 
+            touch-action: none; 
+        }
+        
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background: var(--bg-color); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: white; 
+            user-select: none; 
+            position: fixed;
+            overscroll-behavior: none;
+        }
+        
+        #game-container { position: relative; top: 0; left: 0; width: 100vw; height: 100svh; z-index: 1; }
+        canvas { display: block !important; width: 100% !important; height: 100svh !important; z-index: 2; border: none !important; position: absolute; top: 0; left: 0; overscroll-behavior: none;}
+        
+        #ui-layer { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 10; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 40px; 
+        }
+        
+        #lvl-tag { 
+            font-size: 0.7rem; 
+            letter-spacing: 4px; 
+            opacity: 0.6; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            font-weight: 600;
+        }
+        
+        #timer-display { 
+            font-size: 4.5rem; 
+            font-weight: 300;
+            letter-spacing: 1px;
+            line-height: 1; 
+        }
+        
+        #pause-btn, #music-btn { 
+            position: absolute; 
+            top: 20px; 
+            z-index: 1000; 
+            padding: 10px 18px; 
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            pointer-events: auto; 
+            cursor: pointer; 
+            font-size: 0.65rem; 
+            letter-spacing: 1.5px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        #pause-btn { left: 20px; }
+        #music-btn { right: 20px; }
+        
+        .menu { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: rgba(0, 0, 0, 0);
+            z-index: 3; 
+            text-align: center; 
+            pointer-events: auto; 
+        }
+        
+        #overlay.menu { background: rgba(0, 0, 0, 0); }
+        #pause-menu.menu, #game-over.menu { background: #000; }
+        
+        h1 { 
+            font-weight: 800; 
+            letter-spacing: 8px; 
+            margin-bottom: 40px; 
+            text-transform: uppercase; 
+            font-size: 2.4rem;
+        }
+        
+        .stat-value { 
+            font-size: 1.3rem; 
+            font-weight: 500; 
+            margin-bottom: 30px; 
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        button { 
+            margin: 10px; 
+            padding: 16px 40px; 
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 14px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        button:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        button[onclick="resetGame()"] {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+    </style>
 </head>
 <body>
-
+    
     <div id="game-container">
         <div id="music-btn" onclick="toggleMusic()">MUSIC: ON</div>
         
@@ -160,19 +160,19 @@
             <div id="timer-display">20</div>
         </div>
         <div id="pause-btn" style="display:none;" onclick="togglePause()">PAUSE</div>
-
+        
         <div id="overlay" class="menu">
             <h1>TILT PONG</h1>
             <button onclick="startGame(true)">Enter</button>
             <button onclick="startGame(false)">Practice Mode</button>
         </div>
-
+        
         <div id="pause-menu" class="menu" style="display:none;">
             <h1>PAUSED</h1>
             <button onclick="togglePause()">Resume</button>
             <button onclick="quitToMenu()">Quit</button>
         </div>
-
+        
         <div id="game-over" class="menu" style="display:none;">
             <h1 style="color: #ff3b30; letter-spacing: 8px;">Time Out</h1>
             <div id="final-score" class="stat-value">0</div>
@@ -180,37 +180,37 @@
             <button onclick="quitToMenu()">Quit</button>
         </div>
     </div>
-
+    
     <script>
-
-PokiSDK.init().then(() => {
-    console.log("Poki SDK pronto");
-    PokiSDK.gameLoadingFinished();
-}).catch(() => {
-    console.log("Poki SDK non caricato");
-});
-
-PokiSDK.setDebug(true);
-
-
-function handleBgTap(e) {
-    if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
-        changeBgRandom();
-    }
-}
-
-function enableMenuInteractions() {
-    document.body.addEventListener('click', handleBgTap);
-}
-
-function disableMenuInteractions() {
-    document.body.removeEventListener('click', handleBgTap);
-}
-
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-
+        
+        PokiSDK.init().then(() => {
+            console.log("Poki SDK pronto");
+            PokiSDK.gameLoadingFinished();
+        }).catch(() => {
+            console.log("Poki SDK non caricato");
+        });
+        
+        PokiSDK.setDebug(true);
+        
+        
+        function handleBgTap(e) {
+            if (e.target.tagName !== 'BUTTON' && e.target.id !== 'music-btn' && e.target.id !== 'pause-btn') {
+                changeBgRandom();
+            }
+        }
+        
+        function enableMenuInteractions() {
+            document.body.addEventListener('click', handleBgTap);
+        }
+        
+        function disableMenuInteractions() {
+            document.body.removeEventListener('click', handleBgTap);
+        }
+        
+        
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        
         const { Engine, Render, Runner, Bodies, Composite, Events, Body } = Matter;
         let engine, render, runner, balls = [], isTimed = true, gameActive = false, isPaused = false, timerInterval;
         let currentLevel = 1, timeLeft = 20;
@@ -219,15 +219,15 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
         let bgmInterval = null;
         let musicOn = true;
         let noteCounter = 0;
-
+        
         function startBGM() {
-    if (bgmInterval || !musicOn) return;
-    
-    noteCounter = 0; 
-    
-    const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
-    const bass = [165, 147, 131, 196];
-
+            if (bgmInterval || !musicOn) return;
+            
+            noteCounter = 0; 
+            
+            const melody = [330, 392, 440, 523, 440, 392, 330, 294, 262, 294, 330, 262, 196, 220, 262, 330];
+            const bass = [165, 147, 131, 196];
+            
             bgmInterval = setInterval(() => {
                 const time = audioCtx.currentTime;
                 const oscMel = audioCtx.createOscillator();
@@ -238,7 +238,7 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
                 gainMel.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
                 oscMel.connect(gainMel); gainMel.connect(audioCtx.destination);
                 oscMel.start(); oscMel.stop(time + 0.4);
-
+                
                 if (noteCounter % 4 === 0) {
                     const oscBass = audioCtx.createOscillator();
                     const gainBass = audioCtx.createGain();
@@ -252,118 +252,118 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platfor
                 noteCounter++;
             }, 300);
         }
-
+        
         function stopBGM() {
             if (bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
         }
-
+        
         function toggleMusic() {
             musicOn = !musicOn;
             document.getElementById('music-btn').innerText = musicOn ? "MUSIC: ON" : "MUSIC: OFF";
             musicOn ? startBGM() : stopBGM();
         }
-
-function cleanupGame() {
-    const container = document.getElementById('game-container');
-    const canvases = container.querySelectorAll('canvas');
-    canvases.forEach(c => c.remove());
-
-    gameActive = false;
-    clearInterval(timerInterval);
-    
-    stopBGM();
-    noteCounter = 0;
-    
-    document.body.style.setProperty('--bg-color', '#000');
-    
-    if (runner) {
-        Runner.stop(runner);
-        runner = null;
-    }
-    
-    if (render) {
-        Render.stop(render);
-        if (render.canvas) render.canvas.remove();
-        render = null;
-    }
-    
-    if (engine) {
-        Composite.clear(engine.world, false);
-        engine = null;
-    }
-    
-    currentLevel = 1;
-    timeLeft = 20;
-    document.getElementById('lvl-num').innerText = currentLevel;
-    document.getElementById('timer-display').innerText = timeLeft;
-    document.getElementById('timer-display').style.display = 'block';
-}
-
-function quitToMenu() {
-    PokiSDK.gameplayStop();
-    cleanupGame();
-    
-    document.getElementById('ui-layer').style.display = 'none';
-    document.getElementById('pause-btn').style.display = 'none';
-    document.getElementById('pause-menu').style.display = 'none';
-    document.getElementById('game-over').style.display = 'none';
-    document.getElementById('overlay').style.display = 'flex';
-    
-    init(true); 
-}
-
-async function resetGame() {
-
-    stopBGM();
-    
-    PokiSDK.commercialBreak().then(() => {
-        console.log("Fine pubblicità (o saltata): il gioco riprende.");
-
-        cleanupGame();
         
-        document.getElementById('game-over').style.display = 'none';
-        document.getElementById('pause-btn').style.display = 'block';
-
-        setTimeout(async () => {
-            try { 
-                if (document.documentElement.requestFullscreen) {
-                    await document.documentElement.requestFullscreen(); 
-                }
-            } catch (e) {
-                console.log("Fullscreen non disponibile");
-            }
-
-            init();
-
-            if(musicOn) startBGM();
-            PokiSDK.gameplayStart(); 
+        function cleanupGame() {
+            const container = document.getElementById('game-container');
+            const canvases = container.querySelectorAll('canvas');
+            canvases.forEach(c => c.remove());
             
-        }, 150);
-    });
-}
-
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            stopBGM();
+            noteCounter = 0;
+            
+            document.body.style.setProperty('--bg-color', '#000');
+            
+            if (runner) {
+                Runner.stop(runner);
+                runner = null;
+            }
+            
+            if (render) {
+                Render.stop(render);
+                if (render.canvas) render.canvas.remove();
+                render = null;
+            }
+            
+            if (engine) {
+                Composite.clear(engine.world, false);
+                engine = null;
+            }
+            
+            currentLevel = 1;
+            timeLeft = 20;
+            document.getElementById('lvl-num').innerText = currentLevel;
+            document.getElementById('timer-display').innerText = timeLeft;
+            document.getElementById('timer-display').style.display = 'block';
+        }
+        
+        function quitToMenu() {
+            PokiSDK.gameplayStop();
+            cleanupGame();
+            
+            document.getElementById('ui-layer').style.display = 'none';
+            document.getElementById('pause-btn').style.display = 'none';
+            document.getElementById('pause-menu').style.display = 'none';
+            document.getElementById('game-over').style.display = 'none';
+            document.getElementById('overlay').style.display = 'flex';
+            
+            init(true); 
+        }
+        
+        async function resetGame() {
+            
+            stopBGM();
+            
+            PokiSDK.commercialBreak().then(() => {
+                console.log("Fine pubblicità (o saltata): il gioco riprende.");
+                
+                cleanupGame();
+                
+                document.getElementById('game-over').style.display = 'none';
+                document.getElementById('pause-btn').style.display = 'block';
+                
+                setTimeout(async () => {
+                    try { 
+                        if (document.documentElement.requestFullscreen) {
+                            await document.documentElement.requestFullscreen(); 
+                        }
+                    } catch (e) {
+                        console.log("Fullscreen non disponibile");
+                    }
+                    
+                    init();
+                    
+                    if(musicOn) startBGM();
+                    PokiSDK.gameplayStart(); 
+                    
+                }, 150);
+            });
+        }
+        
         function togglePause() {
-    isPaused = !isPaused;
-    engine.enabled = !isPaused;
-    
-    // Freeze/Unfreeze palline
-    balls.forEach(ball => {
-        Body.setStatic(ball, isPaused);
-    });
-
-    if (isPaused) { 
-        clearInterval(timerInterval); 
-        stopBGM(); 
-    } else { 
-        if (isTimed) startTimer(); 
-        if (musicOn) startBGM(); 
-    }
-    document.getElementById('pause-menu').style.display = isPaused ? 'flex' : 'none';
-}
-
+            isPaused = !isPaused;
+            engine.enabled = !isPaused;
+            
+            // Freeze/Unfreeze palline
+            balls.forEach(ball => {
+                Body.setStatic(ball, isPaused);
+            });
+            
+            if (isPaused) { 
+                clearInterval(timerInterval); 
+                stopBGM(); 
+            } else { 
+                if (isTimed) startTimer(); 
+                if (musicOn) startBGM(); 
+            }
+            document.getElementById('pause-menu').style.display = isPaused ? 'flex' : 'none';
+        }
+        
         function getVpWidth() { return window.visualViewport ? window.visualViewport.width : window.innerWidth; }
         function getVpHeight() { return window.visualViewport ? window.visualViewport.height : window.innerHeight; }
-
+        
         function playSfx(type) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -374,166 +374,166 @@ async function resetGame() {
             else if (type === 'gameover') { osc.type = 'square'; osc.frequency.setValueAtTime(200, audioCtx.currentTime); osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.5); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); }
             osc.start(); osc.stop(audioCtx.currentTime + 0.5);
         }
-
+        
         async function startGame(timed) {
-    disableMenuInteractions();
-    PokiSDK.gameplayStart();
-    cleanupGame();
-    
-    document.body.style.setProperty('--bg-color', '#000');
-
-    if (audioCtx.state === 'suspended') {
-        await audioCtx.resume();
-    }
-
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        try {
-            const permissionState = await DeviceMotionEvent.requestPermission();
-            if (permissionState !== 'granted') console.log("Permesso giroscopio negato");
-        } catch (e) {
-            console.error("Errore permessi sensori:", e);
-        }
-    }
-
-    try {
-        const el = document.documentElement;
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-    } catch (e) {
-        console.log("Fullscreen negato o non supportato");
-    }
-
-    isTimed = timed;
-    document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
-    document.getElementById('overlay').style.display = 'none';
-    
-    document.getElementById('pause-btn').style.display = 'block';
-    
-    if (musicOn) startBGM();
-    
-    init(false);
-}
-
-function resizeCanvas() {
-    if (render && render.canvas) {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        
-        // Aggiorna le dimensioni interne del canvas per Matter.js
-        render.canvas.width = w * window.devicePixelRatio;
-        render.canvas.height = h * window.devicePixelRatio;
-        render.canvas.style.width = w + 'px';
-        render.canvas.style.height = h + 'px';
-        
-        render.options.width = w;
-        render.options.height = h;
-    }
-}
-
-// Ascolta i cambi di orientamento e resize
-window.addEventListener('resize', () => {
-    // Piccolo ritardo per permettere al browser di finire l'animazione fullscreen
-    setTimeout(resizeCanvas, 200);
-});
-
-async function init(isMenuMode = false) {
-    const container = document.getElementById('game-container');
-    const existingCanvas = container.querySelector('canvas');
-    if (existingCanvas) existingCanvas.remove(); 
-
-    const w = getVpWidth(), h = getVpHeight();
-    engine = Engine.create();
-    engine.enabled = true;
-    engine.gravity.x = 0; 
-    engine.gravity.y = 0;
-    
-    render = Render.create({ 
-        element: document.getElementById('game-container'), 
-        engine: engine, 
-        options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
-    });
-    
-    balls = []; 
-    addBall();
-    
-    Render.run(render); 
-    runner = Runner.create(); 
-    Runner.run(runner, engine);
-    
-    gameActive = true; 
-    isPaused = false;
-
-    const uiLayer = document.getElementById('ui-layer');
-    const pauseBtn = document.getElementById('pause-btn');
-
-    if (isMenuMode) {
-        uiLayer.style.display = 'none';
-        pauseBtn.style.display = 'none';
-        enableMenuInteractions();
-    } else {
-        uiLayer.style.display = 'flex';
-        pauseBtn.style.display = 'block';
-        spawnLevel(w, h);
-        if (isTimed) startTimer();
-        disableMenuInteractions();
-    }
-
-    if (!isMenuMode) {
-        Events.on(engine, 'collisionStart', (e) => {
-            e.pairs.forEach(p => {
-                const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
-                if (b) {
-                    playSfx(b.label === 'void_brick' ? 'void' : 'hit');
-                    if (b.label === 'void_brick') triggerVoidEffect();
-                    Composite.remove(engine.world, b);
-                    if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
-                }
-            });
-        });
-    }
-
-    Events.on(engine, 'beforeUpdate', () => {
-    balls.forEach(ball => {
-        const b = ball.position, v = ball.velocity;
-        const w = getVpWidth(), h = getVpHeight();
-        
-        const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
-
-        if (isCurrentlyTouching) {
-            if (!ball.isColliding) {
-                playGlassSfx();
-                ball.isColliding = true;
+            disableMenuInteractions();
+            PokiSDK.gameplayStart();
+            cleanupGame();
+            
+            document.body.style.setProperty('--bg-color', '#000');
+            
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
             }
             
-            if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
-            if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-            else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
-        } else {
-            ball.isColliding = false;
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const permissionState = await DeviceMotionEvent.requestPermission();
+                    if (permissionState !== 'granted') console.log("Permesso giroscopio negato");
+                } catch (e) {
+                    console.error("Errore permessi sensori:", e);
+                }
+            }
+            
+            try {
+                const el = document.documentElement;
+                if (el.requestFullscreen) await el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+            } catch (e) {
+                console.log("Fullscreen negato o non supportato");
+            }
+            
+            isTimed = timed;
+            document.getElementById('timer-display').style.display = isTimed ? 'block' : 'none';
+            document.getElementById('overlay').style.display = 'none';
+            
+            document.getElementById('pause-btn').style.display = 'block';
+            
+            if (musicOn) startBGM();
+            
+            init(false);
         }
-    });
-});
-
-    if (audioCtx.state === 'suspended') {
-        await audioCtx.resume();
-    }
-
-}
-
+        
+        function resizeCanvas() {
+            if (render && render.canvas) {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                
+                // Aggiorna le dimensioni interne del canvas per Matter.js
+                render.canvas.width = w * window.devicePixelRatio;
+                render.canvas.height = h * window.devicePixelRatio;
+                render.canvas.style.width = w + 'px';
+                render.canvas.style.height = h + 'px';
+                
+                render.options.width = w;
+                render.options.height = h;
+            }
+        }
+        
+        // Ascolta i cambi di orientamento e resize
+        window.addEventListener('resize', () => {
+            // Piccolo ritardo per permettere al browser di finire l'animazione fullscreen
+            setTimeout(resizeCanvas, 200);
+        });
+        
+        async function init(isMenuMode = false) {
+            const container = document.getElementById('game-container');
+            const existingCanvas = container.querySelector('canvas');
+            if (existingCanvas) existingCanvas.remove(); 
+            
+            const w = getVpWidth(), h = getVpHeight();
+            engine = Engine.create();
+            engine.enabled = true;
+            engine.gravity.x = 0; 
+            engine.gravity.y = 0;
+            
+            render = Render.create({ 
+                element: document.getElementById('game-container'), 
+                engine: engine, 
+                options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: window.devicePixelRatio } 
+            });
+            
+            balls = []; 
+            addBall();
+            
+            Render.run(render); 
+            runner = Runner.create(); 
+            Runner.run(runner, engine);
+            
+            gameActive = true; 
+            isPaused = false;
+            
+            const uiLayer = document.getElementById('ui-layer');
+            const pauseBtn = document.getElementById('pause-btn');
+            
+            if (isMenuMode) {
+                uiLayer.style.display = 'none';
+                pauseBtn.style.display = 'none';
+                enableMenuInteractions();
+            } else {
+                uiLayer.style.display = 'flex';
+                pauseBtn.style.display = 'block';
+                spawnLevel(w, h);
+                if (isTimed) startTimer();
+                disableMenuInteractions();
+            }
+            
+            if (!isMenuMode) {
+                Events.on(engine, 'collisionStart', (e) => {
+                    e.pairs.forEach(p => {
+                        const b = p.bodyA.label.includes('brick') ? p.bodyA : (p.bodyB.label.includes('brick') ? p.bodyB : null);
+                        if (b) {
+                            playSfx(b.label === 'void_brick' ? 'void' : 'hit');
+                            if (b.label === 'void_brick') triggerVoidEffect();
+                            Composite.remove(engine.world, b);
+                            if (engine.world.bodies.filter(body => body.label.includes('brick')).length === 0) levelWin();
+                        }
+                    });
+                });
+            }
+            
+            Events.on(engine, 'beforeUpdate', () => {
+                balls.forEach(ball => {
+                    const b = ball.position, v = ball.velocity;
+                    const w = getVpWidth(), h = getVpHeight();
+                    
+                    const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
+                    
+                    if (isCurrentlyTouching) {
+                        if (!ball.isColliding) {
+                            playGlassSfx();
+                            ball.isColliding = true;
+                        }
+                        
+                        if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                        else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
+                        if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+                        else if (b.y > h - 12) { Body.setPosition(ball, {x: b.x, y: h - 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
+                    } else {
+                        ball.isColliding = false;
+                    }
+                });
+            });
+            
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+            
+        }
+        
         function addBall() {
-    const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { 
-        restitution: 0.8, 
-        friction: 0, 
-        frictionAir: 0, 
-        label: 'ball', 
-        render: { fillStyle: '#ffffff' } 
-    });
-    ball.isColliding = false;
-    balls.push(ball);
-    Composite.add(engine.world, ball);
-}
-
+            const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { 
+                restitution: 0.8, 
+                friction: 0, 
+                frictionAir: 0, 
+                label: 'ball', 
+                render: { fillStyle: '#ffffff' } 
+            });
+            ball.isColliding = false;
+            balls.push(ball);
+            Composite.add(engine.world, ball);
+        }
+        
         function spawnLevel(w, h) {
             const colors = ['#FF3B30', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
             for(let i = 0; i < 6 + currentLevel; i++) {
@@ -544,68 +544,68 @@ async function init(isMenuMode = false) {
                 }));
             }
         }
-
+        
         function triggerVoidEffect() {
             document.body.style.setProperty('--bg-color', `hsl(${Math.random()*360}, 40%, 5%)`);
             engine.world.bodies.filter(b => b.label === 'brick').forEach(b => Body.setPosition(b, { x: 50 + Math.random()*(getVpWidth()-100), y: 160 + Math.random()*(getVpHeight()-280) }));
         }
-
+        
         function startTimer() { clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = timeLeft; if (timeLeft <= 0) gameOver(); }, 1000); }
         function levelWin() { currentLevel++; if (currentLevel % 5 === 0) { addBall(); playSfx('bonus'); } if (isTimed) timeLeft += Math.max(2, 12 - currentLevel); document.getElementById('lvl-num').innerText = currentLevel; spawnLevel(getVpWidth(), getVpHeight()); }
         function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
-
-        function playGlassSfx() {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
-    
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-    
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.1);
-}
-
-        window.addEventListener('devicemotion', (e) => {
-    if (gameActive && e.accelerationIncludingGravity) {
-        const multiplier = isIOS ? -1 : 1; 
         
-        engine.gravity.x = multiplier * (-e.accelerationIncludingGravity.x * 0.8);
-        engine.gravity.y = multiplier * (e.accelerationIncludingGravity.y * 0.8);
-    }
-});
-
-function changeBgRandom() {
-    const randomHue = Math.floor(Math.random() * 360);
-    document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
-}
-
-
-
-
-window.addEventListener('keydown', (ev) => {
-    if (ev.keyCode === 32) { 
-        togglePause();
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (!engine) init(true); 
-});
-
-PokiSDK.setDebug(false); 
-
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && gameActive && !isPaused) {
-        togglePause();
-    }
-});
-
+        function playGlassSfx() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+        
+        window.addEventListener('devicemotion', (e) => {
+            if (gameActive && e.accelerationIncludingGravity) {
+                const multiplier = isIOS ? -1 : 1; 
+                
+                engine.gravity.x = multiplier * (-e.accelerationIncludingGravity.x * 0.8);
+                engine.gravity.y = multiplier * (e.accelerationIncludingGravity.y * 0.8);
+            }
+        });
+        
+        function changeBgRandom() {
+            const randomHue = Math.floor(Math.random() * 360);
+            document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
+        }
+        
+        
+        
+        
+        window.addEventListener('keydown', (ev) => {
+            if (ev.keyCode === 32) { 
+                togglePause();
+            }
+        });
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!engine) init(true); 
+        });
+        
+        PokiSDK.setDebug(false); 
+        
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden' && gameActive && !isPaused) {
+                togglePause();
+            }
+        });
+        
     </script>
 </body>
 </html>
