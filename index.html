@@ -33,8 +33,19 @@
     }
     
     #game-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; min-height: 100dvh; }
-    canvas { opacity: 0; display: block !important; width: 100% !important; height: 100% !important; z-index: 2; border: none !important; position: absolute; top: 0; left: 0; }
-    canvas.ready { opacity: 1; }
+   canvas { 
+    /* Rimuovi opacity: 0; e usa visibility o un display control */
+    display: block !important; 
+    width: 100% !important; 
+    height: 100% !important; 
+    z-index: 2; 
+    border: none !important; 
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    /* Forza l'accelerazione hardware */
+    will-change: transform;
+}
 
     #ui-layer { 
         position: absolute; 
