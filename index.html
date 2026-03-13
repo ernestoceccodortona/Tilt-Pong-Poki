@@ -438,6 +438,25 @@ async function resetGame() {
 
 let resizeObserver;
 
+function updateWorldDimensions(w, h) {
+    if (!render) return;
+    
+    // Aggiorna le dimensioni del render
+    render.canvas.width = w;
+    render.canvas.height = h;
+    render.options.width = w;
+    render.options.height = h;
+    
+    // AGGIORNAMENTO CRITICO: Aggiorna i confini del mondo fisico
+    render.bounds.max.x = w;
+    render.bounds.max.y = h;
+    
+    // Se hai creato dei muri invisibili per delimitare il gioco, 
+    // dovresti riposizionarli qui. 
+    // Nota: nel tuo codice gestisci le collisioni bordi nell'evento 'beforeUpdate'
+    // usando getVpWidth() e getVpHeight(), che ora sono superflui.
+}
+
 async function init(isMenuMode = false) {
     const container = document.getElementById('game-container');
     const existingCanvas = container.querySelector('canvas');
@@ -509,7 +528,9 @@ async function init(isMenuMode = false) {
     Events.on(engine, 'beforeUpdate', () => {
     balls.forEach(ball => {
         const b = ball.position, v = ball.velocity;
-        const w = getVpWidth(), h = getVpHeight();
+        // Usa le dimensioni del render invece di quelle della finestra
+        const w = render.options.width; 
+        const h = render.options.height;
         
         const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
 
@@ -626,17 +647,13 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-// Usa ResizeObserver per reagire ai cambi di layout reali
 const ro = new ResizeObserver(entries => {
     for (let entry of entries) {
-        if (render && entry.contentRect.width > 0) {
-            const w = entry.contentRect.width;
-            const h = entry.contentRect.height;
-            
-            render.canvas.width = w;
-            render.canvas.height = h;
-            render.options.width = w;
-            render.options.height = h;
+        const w = entry.contentRect.width;
+        const h = entry.contentRect.height;
+        
+        if (render && w > 0 && h > 0) {
+            updateWorldDimensions(w, h);
         }
     }
 });
