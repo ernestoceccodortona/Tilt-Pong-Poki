@@ -433,7 +433,7 @@ async function resetGame() {
     init(false);
 }
 
-function init(isMenuMode = false) {
+async function init(isMenuMode = false) {
     const container = document.getElementById('game-container');
     
     // 1. Pulisci il canvas precedente
