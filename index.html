@@ -461,10 +461,6 @@ async function init(isMenuMode = false) {
             pixelRatio: window.devicePixelRatio 
         } 
     });
-
-    // AGGIUNTA: Forza il canvas a essere esattamente w x h
-    render.canvas.style.width = '100%';
-    render.canvas.style.height = '100dvh'; // O '100%' se il container è dvh
     
     balls = []; 
     addBall();
