@@ -413,12 +413,13 @@
     async function startGame(timed) {
         disableMenuInteractions();
         
+        // Attivazione Fullscreen esplicita al click del bottone
         try {
             const el = document.documentElement;
             if (el.requestFullscreen) await el.requestFullscreen();
             else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
         } catch (e) {
-            console.log("Fullscreen denied");
+            console.log("Fullscreen non supportato o negato");
         }
         
         PokiSDK.gameplayStart();
@@ -524,15 +525,15 @@
         });
         
         Events.on(engine, 'beforeUpdate', () => {
-    balls.forEach(ball => {
-        const b = ball.position, v = ball.velocity;
-        const w = render.options.width; 
-        const h = render.options.height;
-        
-        const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
-        if (isCurrentlyTouching) {
-            // Usa playSfx('wall') invece di playGlassSfx
-            if (!ball.isColliding) { playSfx('wall'); ball.isColliding = true; }
+            balls.forEach(ball => {
+                const b = ball.position, v = ball.velocity;
+                const w = render.options.width; 
+                const h = render.options.height;
+                
+                const isCurrentlyTouching = (b.x < 15 || b.x > w - 15 || b.y < 15 || b.y > h - 15);
+                if (isCurrentlyTouching) {
+                    // Usa playSfx('wall') invece di playGlassSfx
+                    if (!ball.isColliding) { playSfx('wall'); ball.isColliding = true; }
                     if (b.x < 12) { Body.setPosition(ball, {x: 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
                     else if (b.x > w - 12) { Body.setPosition(ball, {x: w - 12, y: b.y}); Body.setVelocity(ball, {x: -v.x * 0.5, y: v.y}); }
                     if (b.y < 12) { Body.setPosition(ball, {x: b.x, y: 12}); Body.setVelocity(ball, {x: v.x, y: -v.y * 0.5}); }
@@ -607,41 +608,41 @@
     function gameOver() { PokiSDK.gameplayStop(); gameActive = false; clearInterval(timerInterval); Runner.stop(runner); stopBGM(); playSfx('gameover'); document.getElementById('final-score').innerText = "Level: " + currentLevel; document.getElementById('game-over').style.display = 'flex'; }
     
     function playSfx(type) {
-    if (audioCtx.state !== 'running') return; 
-    
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    
-    if (type === 'hit') { 
-        osc.frequency.setValueAtTime(440, audioCtx.currentTime); 
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); 
-    } 
-    // AGGIUNTA: Il suono per il muro
-    else if (type === 'wall') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        if (audioCtx.state !== 'running') return; 
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        
+        if (type === 'hit') { 
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime); 
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); 
+        } 
+        // AGGIUNTA: Il suono per il muro
+        else if (type === 'wall') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200 + Math.random() * 400, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        }
+        else if (type === 'void') { 
+            osc.type = 'sawtooth'; 
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime); 
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); 
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2); 
+        } else if (type === 'bonus') { 
+            osc.type = 'sine'; 
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime); 
+            osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.3); 
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); 
+        } else if (type === 'gameover') { 
+            osc.type = 'square'; 
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime); 
+            osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.5); 
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); 
+        }
+        osc.start(); osc.stop(audioCtx.currentTime + 0.5);
     }
-    else if (type === 'void') { 
-        osc.type = 'sawtooth'; 
-        osc.frequency.setValueAtTime(220, audioCtx.currentTime); 
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2); 
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2); 
-    } else if (type === 'bonus') { 
-        osc.type = 'sine'; 
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime); 
-        osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.3); 
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3); 
-    } else if (type === 'gameover') { 
-        osc.type = 'square'; 
-        osc.frequency.setValueAtTime(200, audioCtx.currentTime); 
-        osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.5); 
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); 
-    }
-    osc.start(); osc.stop(audioCtx.currentTime + 0.5);
-}
     
     window.addEventListener('devicemotion', (e) => {
         if (gameActive && e.accelerationIncludingGravity) {
@@ -656,14 +657,6 @@
         const randomHue = Math.floor(Math.random() * 360);
         document.body.style.setProperty('--bg-color', `hsl(${randomHue}, 40%, 5%)`);
     }
-    
-    document.addEventListener('click', function goFullscreen() {
-        const el = document.documentElement;
-        if (el.requestFullscreen) el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        document.removeEventListener('click', goFullscreen);
-    }, { once: true });
-    
     
     window.addEventListener('keydown', (ev) => {
         if (ev.keyCode === 32) { 
