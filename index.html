@@ -557,6 +557,17 @@ async function init(isMenuMode = false) {
     // Sblocco audio finale
     if (audioCtx.state === 'suspended') await audioCtx.resume();
     render.canvas.classList.add('ready');
+
+    function forceEngineTick() {
+    if (engine && runner) {
+        // Forza Matter.js a elaborare un frame manualmente
+        Matter.Engine.update(engine, 1000 / 60);
+        requestAnimationFrame(forceEngineTick);
+    }
+}
+
+    forceEngineTick();
+
 }
 
 function addBall() {
