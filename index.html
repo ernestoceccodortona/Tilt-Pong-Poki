@@ -512,13 +512,21 @@ async function init(isMenuMode = false) {
     gameActive = true; 
     isPaused = false;
 
-    const resumeAudio = () => {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        document.removeEventListener('click', resumeAudio);
-        document.removeEventListener('touchstart', resumeAudio);
-    };
-    document.addEventListener('click', resumeAudio);
-    document.addEventListener('touchstart', resumeAudio);
+    const unlockAudio = async () => {
+    if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+    }
+    // Avvia la musica solo se l'utente ha scelto musica ON
+    if (musicOn && !bgmInterval) {
+        startBGM();
+    }
+    // Rimuovi i listener una volta sbloccato
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+};
+
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
 
     // EVENTI GLOBALI: Sempre attivi, così la pallina rimbalza anche nel menu
     Events.on(engine, 'collisionStart', (e) => {
