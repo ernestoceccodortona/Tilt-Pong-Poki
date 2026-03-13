@@ -442,20 +442,15 @@ let resizeObserver;
 function updateWorldDimensions(w, h) {
     if (!render) return;
     
-    // Aggiorna le dimensioni del render
     render.canvas.width = w;
     render.canvas.height = h;
     render.options.width = w;
     render.options.height = h;
     
-    // AGGIORNAMENTO CRITICO: Aggiorna i confini del mondo fisico
+    // AGGIORNAMENTO: Non toccare i bounds.max manualmente
+    // Matter.js gestisce i bounds internamente in base a render.options
     render.bounds.max.x = w;
     render.bounds.max.y = h;
-    
-    // Se hai creato dei muri invisibili per delimitare il gioco, 
-    // dovresti riposizionarli qui. 
-    // Nota: nel tuo codice gestisci le collisioni bordi nell'evento 'beforeUpdate'
-    // usando getVpWidth() e getVpHeight(), che ora sono superflui.
 }
 
 async function init(isMenuMode = false) {
@@ -565,12 +560,16 @@ async function init(isMenuMode = false) {
 
 }
 
-        function addBall() {
-    const ball = Bodies.circle(getVpWidth()/2, getVpHeight()/2, 12, { 
+function addBall() {
+    // Usa render.options.width/height che sono sempre sincronizzati col mondo
+    const centerX = render ? render.options.width / 2 : window.innerWidth / 2;
+    const centerY = render ? render.options.height / 2 : window.innerHeight / 2;
+
+    const ball = Bodies.circle(centerX, centerY, 12, { 
         restitution: 0.8, 
         friction: 0, 
         frictionAir: 0, 
-        isStatic: false, // <-- Assicurati che sia sempre false alla creazione
+        isStatic: false, 
         label: 'ball', 
         render: { fillStyle: '#ffffff' } 
     });
