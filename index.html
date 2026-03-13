@@ -471,28 +471,25 @@ async function init(isMenuMode = false) {
     const h = rect.height;
 
     engine = Engine.create();
-    engine.enabled = true;
+    // Aggiungi questo: disabilita la gravità del motore se vuoi che la pallina fluttui 
+    // o lasciala se vuoi che cada (nel tuo caso è 0 via devicemotion)
+    engine.gravity.y = 0;
+    engine.gravity.x = 0;
     
     render = Render.create({ 
         element: container, 
         engine: engine, 
-        options: { 
-            width: w, 
-            height: h, 
-            wireframes: false, 
-            background: 'transparent', 
-            pixelRatio: 1 
-        } 
+        options: { width: w, height: h, wireframes: false, background: 'transparent', pixelRatio: 1 } 
     });
 
     render.canvas.style.width = '100%';
     render.canvas.style.height = '100%';
     
-    // Inizializza entità: la pallina appare SUBITO
+    // Inizializza entità
     balls = []; 
     addBall();
     
-    // Avvia i motori
+    // AVVIO IMMEDIATO
     Render.run(render); 
     runner = Runner.create(); 
     Runner.run(runner, engine);
@@ -558,16 +555,6 @@ async function init(isMenuMode = false) {
     if (audioCtx.state === 'suspended') await audioCtx.resume();
     render.canvas.classList.add('ready');
 
-    function forceEngineTick() {
-    if (engine && runner) {
-        // Forza Matter.js a elaborare un frame manualmente
-        Matter.Engine.update(engine, 1000 / 60);
-        requestAnimationFrame(forceEngineTick);
-    }
-}
-
-    forceEngineTick();
-
 }
 
 function addBall() {
@@ -585,9 +572,16 @@ function addBall() {
         label: 'ball', 
         render: { fillStyle: '#ffffff' } 
     });
+    
     ball.isColliding = false;
     balls.push(ball);
     Composite.add(engine.world, ball);
+
+    // --- AGGIUNTA FONDAMENTALE ---
+    // Diamo una velocità iniziale immediata. 
+    // Anche un valore piccolo come 2,2 forza il motore a calcolare il primo movimento
+    // e "sveglia" il rendering su Android.
+    Body.setVelocity(ball, { x: 5, y: 5 }); 
 }
 
         function spawnLevel(w, h) {
@@ -664,15 +658,12 @@ window.addEventListener('keydown', (ev) => {
 let isInitializing = false; // Aggiungi questa variabile globale
 
 const container = document.getElementById('game-container');
-const ro = new ResizeObserver(async entries => { // Rendi la funzione async
+const ro = new ResizeObserver(entries => {
     const { width, height } = entries[0].contentRect;
-    
     if (width > 0 && height > 0) {
-        if (!engine && !isInitializing) {
-            isInitializing = true; // Blocca l'ingresso
-            await init(true);
-            isInitializing = false; // Sblocca dopo che init ha finito
-        } else if (engine && (width !== render.options.width || height !== render.options.height)) {
+        if (!engine) {
+            init(true); // Rimosso async/await, chiamala in modo sincrono
+        } else {
             updateWorldDimensions(width, height);
         }
     }
