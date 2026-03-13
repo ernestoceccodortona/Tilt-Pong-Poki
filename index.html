@@ -499,8 +499,11 @@
         
         if (!container || container.clientWidth < 10) return;
         
+        // Crea un nuovo engine se è stato distrutto da cleanup
+        if (!engine) engine = Engine.create();
+        
         const rect = container.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1; // Prendi il pixel ratio
+        const dpr = window.devicePixelRatio || 1;
         const w = rect.width;
         const h = rect.height;
         
@@ -508,15 +511,14 @@
             element: container, 
             engine: engine, 
             options: { 
-                width: w * dpr,    // Moltiplica per dpr
-                height: h * dpr,   // Moltiplica per dpr
+                width: w * dpr, 
+                height: h * dpr, 
                 wireframes: false, 
                 background: 'transparent', 
-                pixelRatio: dpr    // Imposta il pixel ratio
+                pixelRatio: dpr 
             } 
         });
         
-        // Forza le dimensioni fisiche del canvas tramite stile CSS
         render.canvas.style.width = w + 'px';
         render.canvas.style.height = h + 'px';
         
