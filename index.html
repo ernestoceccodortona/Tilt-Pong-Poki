@@ -457,7 +457,10 @@
             addBall();
             
             Render.run(render); 
-            runner = Runner.create(); 
+            runner = Runner.create({
+        isFixed: true,        // Forza il loop di aggiornamento a una frequenza fissa
+        delta: 1000 / 60      // Imposta il tempo di calcolo a 1/60 di secondo
+    });
             Runner.run(runner, engine);
             
             gameActive = true; 
